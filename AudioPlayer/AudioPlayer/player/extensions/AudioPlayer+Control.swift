@@ -90,8 +90,8 @@ extension AudioPlayer {
             queue = nil
         }
 
-        setAudioSession(active: false)
         state = .stopped
+        setAudioSession(active: false)
     }
 
     /// Seeks to a specific time.

@@ -67,6 +67,9 @@ public class AudioPlayer: NSObject {
                 networkEventProducer.startProducingEvents()
                 audioItemEventProducer.startProducingEvents()
                 qualityAdjustmentEventProducer.startProducingEvents()
+                
+                // TODO: Better place to do this?
+                registerRemoteControlHandlers()
             } else {
                 playerEventProducer.player = nil
                 audioItemEventProducer.item = nil
@@ -206,6 +209,17 @@ public class AudioPlayer: NSObject {
             }
         }
     }
+    
+    /// Defines which remote control commands should be enabled
+    public var enabledRemoteCommands: [AudioPlayerRemoteCommand] = [.previousTrack, .playPause, .nextTrack] {
+        didSet {
+            registerRemoteControlHandlers()
+        }
+    }
+    
+    /// Defined whether the playback position is changable through the platform remote controls & lock screen. Default value is `true`.
+    /// should be changed *before* items are loaded. TODO: make a didSet that makes it live ?
+    public var remotePlaybackPositionChangeEnabled = true
 
     /// Defines how to behave when the user is seeking through the lockscreen or the control center.
     ///
@@ -317,12 +331,14 @@ public class AudioPlayer: NSObject {
     func updateNowPlayingInfoCenter() {
         #if os(iOS) || os(tvOS)
             if let item = currentItem {
+                setRemoteControlCommandsEnabled(true)
                 MPNowPlayingInfoCenter.default().ap_update(
                     with: item,
                     duration: currentItemDuration,
                     progression: currentItemProgression,
                     playbackRate: player?.rate ?? 0)
             } else {
+                setRemoteControlCommandsEnabled(false)
                 MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
             }
         #endif

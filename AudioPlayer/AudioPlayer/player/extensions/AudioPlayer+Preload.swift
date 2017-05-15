@@ -28,9 +28,12 @@ extension AudioPlayer {
         }
     }
     
-    public func getPlayerItem(forUrl: URL) -> AVPlayerItem {
+    public func getAVPlayerItem(forUrl: URL) -> AVPlayerItem {
         let asset = getAVURLAsset(forUrl: forUrl)
         let playerItem = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: AudioPlayer.assetPreloadKeys)
+        if #available(iOS 10.0, tvOS 10.0, OSX 10.12, *) {
+            playerItem.preferredForwardBufferDuration = self.preferredForwardBufferDuration
+        }
         return playerItem
     }
     
@@ -48,10 +51,10 @@ extension AudioPlayer {
     
     public func preloadNextItemAsset() {
         if hasNext, let queue = queue {
-            let nextPosition = queue.nextPosition
-            let item = queue.items[nextPosition]
-            let urlInfo = item.highestQualityURL
-            let asset = getAVURLAsset(forUrl: urlInfo.url)
+            let nextPosition = queue.nextPosition,
+                item = queue.items[nextPosition],
+                urlInfo = item.highestQualityURL,
+                asset = getAVURLAsset(forUrl: urlInfo.url)
             print("preloading queue idx: \(nextPosition)")
             preloadItemAsset(asset: asset) { asset in
                 if (asset == nil) {

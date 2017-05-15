@@ -106,11 +106,7 @@ public class AudioPlayer: NSObject {
                 }
                 
                 //Create new AVPlayerItem
-                let playerItem = AVPlayerItem(url: info.url)
-                
-                if #available(iOS 10.0, tvOS 10.0, OSX 10.12, *) {
-                    playerItem.preferredForwardBufferDuration = self.preferredForwardBufferDuration
-                }
+                let playerItem = getAVPlayerItem(forUrl: info.url)
 
                 //Creates new player
                 player = AVPlayer(playerItem: playerItem)

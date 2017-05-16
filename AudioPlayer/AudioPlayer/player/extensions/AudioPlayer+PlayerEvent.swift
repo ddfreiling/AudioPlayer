@@ -6,6 +6,8 @@
 //  Copyright © 2016 Kevin Delannoy. All rights reserved.
 //
 
+import Foundation
+
 extension AudioPlayer {
     /// Handles player events.
     ///
@@ -16,8 +18,19 @@ extension AudioPlayer {
         switch event {
         case .endedPlaying(let error):
             if let error = error {
-                state = .failed
-                failedError = .foundationError(error)
+                if !currentItemIsOffline,
+                    isInternetConnectionError(error) || isEndedEarlyError(error) {
+                    // While playing online content we got an internet error or
+                    // ended playing the item before it was finished (usually also due to connection loss).
+                    stateWhenConnectionLost = .playing
+                    state = .waitingForConnection
+                } else {
+                    // Some unrecoverable error occured while playing, set failed state and
+                    // let the retry handler try again if it's enabled.
+                    
+                    state = .failed
+                    failedError = .foundationError(error)
+                }
             } else {
                 nextOrStop()
             }
@@ -124,7 +137,7 @@ extension AudioPlayer {
             }
 
             stateBeforeBuffering = state
-            if reachability?.isReachable ?? false || (currentItem?.soundURLs[currentQuality]?.ap_isOfflineURL ?? false) {
+            if isOnline || currentItemIsOffline {
                 state = .buffering
             } else {
                 state = .waitingForConnection
@@ -135,4 +148,17 @@ extension AudioPlayer {
             break
         }
     }
+}
+
+//TODO: Refactor to better location
+func isInternetConnectionError(_ error: Error) -> Bool {
+    guard let urlErr = error as? URLError else {
+        return false
+    }
+    return urlErr.code == URLError.Code.notConnectedToInternet
+        || urlErr.code == URLError.Code.networkConnectionLost
+}
+
+func isEndedEarlyError(_ error: Error) -> Bool {
+    return error as? EndedError == EndedError.ItemEndedEarly
 }

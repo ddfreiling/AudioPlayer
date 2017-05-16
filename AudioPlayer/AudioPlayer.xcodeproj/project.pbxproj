@@ -104,11 +104,11 @@
 		653E188C1C3541B8003C0CAB /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462679671AED5DDC003771C9 /* AudioPlayer.swift */; };
 		653E188D1C3541BB003C0CAB /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466930791BAD30AB00C1E97C /* Reachability.swift */; };
 		BB3ED56C1EC4993400AA0C30 /* AudioPlayer+Preload.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3ED56B1EC4993400AA0C30 /* AudioPlayer+Preload.swift */; };
-		BBEC49BC1EC8D3EA00BAB484 /* AudioPlayer+Preload.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3ED56B1EC4993400AA0C30 /* AudioPlayer+Preload.swift */; };
-		BBEC49BD1EC8D3EA00BAB484 /* AudioPlayer+Preload.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3ED56B1EC4993400AA0C30 /* AudioPlayer+Preload.swift */; };
 		BB5E356D1EC3738F001BF508 /* AudioPlayerBufferingStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB5E356C1EC3738F001BF508 /* AudioPlayerBufferingStrategy.swift */; };
 		BBEC49BA1EC8D2C300BAB484 /* AudioPlayerBufferingStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB5E356C1EC3738F001BF508 /* AudioPlayerBufferingStrategy.swift */; };
 		BBEC49BB1EC8D2C400BAB484 /* AudioPlayerBufferingStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB5E356C1EC3738F001BF508 /* AudioPlayerBufferingStrategy.swift */; };
+		BBEC49BC1EC8D3EA00BAB484 /* AudioPlayer+Preload.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3ED56B1EC4993400AA0C30 /* AudioPlayer+Preload.swift */; };
+		BBEC49BD1EC8D3EA00BAB484 /* AudioPlayer+Preload.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3ED56B1EC4993400AA0C30 /* AudioPlayer+Preload.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -172,8 +172,8 @@
 		46F956081C97385400923EE1 /* AudioItemEventProducer_Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioItemEventProducer_Tests.swift; sourceTree = "<group>"; };
 		653E18801C353DD0003C0CAB /* AudioPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AudioPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		653E18841C353DD0003C0CAB /* Info-tvOS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-tvOS.plist"; sourceTree = "<group>"; };
-		BB5E356C1EC3738F001BF508 /* AudioPlayerBufferingStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerBufferingStrategy.swift; sourceTree = "<group>"; };
 		BB3ED56B1EC4993400AA0C30 /* AudioPlayer+Preload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AudioPlayer+Preload.swift"; sourceTree = "<group>"; };
+		BB5E356C1EC3738F001BF508 /* AudioPlayerBufferingStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerBufferingStrategy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */

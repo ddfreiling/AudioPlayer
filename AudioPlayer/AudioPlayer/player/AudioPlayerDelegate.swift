@@ -26,6 +26,13 @@ import AVFoundation
     ///   - audioPlayer: The audio player.
     ///   - item: The item that is about to start being played.
     @objc optional func audioPlayer(_ audioPlayer: AudioPlayer, willStartPlaying item: AudioItem)
+    
+    /// This method is called when the audio player finishes playing an item to its end.
+    ///
+    /// - Parameters:
+    ///   - audioPlayer: The audio player.
+    ///   - item: The item that finished playing
+    @objc optional func audioPlayer(_ audioPlayer: AudioPlayer, finishedPlaying item: AudioItem)
 
     /// This method is called a regular time interval while playing. It notifies the delegate that the current playing
     /// progression changed.

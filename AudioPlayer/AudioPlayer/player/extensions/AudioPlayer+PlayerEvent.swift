@@ -32,6 +32,9 @@ extension AudioPlayer {
                     failedError = .foundationError(error)
                 }
             } else {
+                if let currentItem = self.currentItem {
+                    delegate?.audioPlayer?(self, finishedPlaying: currentItem)
+                }
                 nextOrStop()
             }
 

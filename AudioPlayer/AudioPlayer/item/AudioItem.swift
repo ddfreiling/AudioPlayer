@@ -34,7 +34,7 @@ public enum AudioQuality: Int {
 // MARK: - AudioItemURL
 
 /// `AudioItemURL` contains information about an Item URL such as its quality.
-public struct AudioItemURL {
+@objc public class AudioItemURL: NSObject {
     /// The quality of the stream.
     public let quality: AudioQuality
 
@@ -59,7 +59,7 @@ public struct AudioItemURL {
 /// An `AudioItem` instance contains every piece of information needed for an `AudioPlayer` to play.
 ///
 /// URLs can be remote or local.
-open class AudioItem: NSObject {
+@objc open class AudioItem: NSObject {
     /// Returns the available qualities.
     public let soundURLs: [AudioQuality: URL]
 

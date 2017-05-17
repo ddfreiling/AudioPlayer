@@ -8,9 +8,6 @@
 
 import AVFoundation
 
-/// This typealias only serves the purpose of saving user to `import AVFoundation`.
-public typealias Metadata = [AVMetadataItem]
-
 /// This protocol contains helpful methods to alert you of specific events. If you want to be notified about those
 /// events, you will have to set a delegate to your `audioPlayer` instance.
 @objc public protocol AudioPlayerDelegate {
@@ -54,7 +51,7 @@ public typealias Metadata = [AVMetadataItem]
     ///   - audioPlayer: The audio player.
     ///   - item: Current item.
     ///   - data: Found metadata.
-    @objc optional func audioPlayer(_ audioPlayer: AudioPlayer, didUpdateEmptyMetadataOn item: AudioItem, withData data: Metadata)
+    @objc optional func audioPlayer(_ audioPlayer: AudioPlayer, didUpdateEmptyMetadataOn item: AudioItem, withData data: [AVMetadataItem])
 
     /// This method gets called while the audio player is loading the file (over the network or locally). It lets the
     /// delegate know what time range has already been loaded.

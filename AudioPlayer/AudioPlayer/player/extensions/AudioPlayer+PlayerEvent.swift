@@ -51,18 +51,18 @@ extension AudioPlayer {
         case .loadedDuration(let time):
             if let currentItem = currentItem, let time = time.ap_timeIntervalValue {
                 updateNowPlayingInfoCenter()
-                delegate?.audioPlayer(self, didFindDuration: time, for: currentItem)
+                delegate?.audioPlayer?(self, didFindDuration: time, for: currentItem)
             }
 
         case .loadedMetadata(let metadata):
             if let currentItem = currentItem, !metadata.isEmpty {
                 currentItem.parseMetadata(metadata)
-                delegate?.audioPlayer(self, didUpdateEmptyMetadataOn: currentItem, withData: metadata)
+                delegate?.audioPlayer?(self, didUpdateEmptyMetadataOn: currentItem, withData: metadata)
             }
 
         case .loadedMoreRange:
             if let currentItem = currentItem, let currentItemLoadedRange = currentItemLoadedRange {
-                delegate?.audioPlayer(self, didLoad: currentItemLoadedRange, for: currentItem)
+                delegate?.audioPlayer?(self, didLoad: currentItemLoadedRange, for: currentItem)
                 
                 if bufferingStrategy == .playWhenPreferredBufferDurationFull && state == .buffering,
                     let currentItemLoadedAhead = currentItemLoadedAhead,
@@ -92,7 +92,7 @@ extension AudioPlayer {
                 //Then we can call the didUpdateProgressionTo: delegate method
                 let itemDuration = currentItemDuration ?? 0
                 let percentage = (itemDuration > 0 ? Float(currentItemProgression / itemDuration) * 100 : 0)
-                delegate?.audioPlayer(self, didUpdateProgressionTo: currentItemProgression, percentageRead: percentage)
+                delegate?.audioPlayer?(self, didUpdateProgressionTo: currentItemProgression, percentageRead: percentage)
             }
 
         case .readyToPlay:

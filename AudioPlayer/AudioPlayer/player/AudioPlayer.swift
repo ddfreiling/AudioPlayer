@@ -119,7 +119,7 @@ public class AudioPlayer: NSObject {
 
                 //Calls delegate
                 if oldValue != currentItem {
-                    delegate?.audioPlayer(self, willStartPlaying: currentItem)
+                    delegate?.audioPlayer?(self, willStartPlaying: currentItem)
                 }
                 player?.rate = rate
             } else {
@@ -296,7 +296,7 @@ public class AudioPlayer: NSObject {
                     backgroundHandler.endBackgroundTask()
                 }
 
-                delegate?.audioPlayer(self, didChangeStateFrom: oldValue, to: state)
+                delegate?.audioPlayer?(self, didChangeStateFrom: oldValue, to: state)
             }
         }
     }

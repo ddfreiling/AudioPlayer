@@ -40,50 +40,9 @@ import MediaPlayer
     case changeRepeatMode = 14
     /// Available from iOS 10 and tvOS 10
     case changeShuffleMode = 15
-    
-    func getMPRemoteCommands() -> [MPRemoteCommand] {
-        let remote = MPRemoteCommandCenter.shared()
-        switch self {
-        case .playPause:
-            return [remote.togglePlayPauseCommand, remote.playCommand, remote.pauseCommand]
-        case .stop:
-            return [remote.stopCommand]
-        case .nextTrack:
-            return [remote.nextTrackCommand]
-        case .previousTrack:
-            return [remote.previousTrackCommand]
-        case .skipForward:
-            return [remote.skipForwardCommand]
-        case .skipBackward:
-            return [remote.skipBackwardCommand]
-        case .seekForward:
-            return [remote.seekForwardCommand]
-        case .seekBackward:
-            return [remote.seekBackwardCommand]
-        case .changePlaybackRate:
-            return [remote.changePlaybackRateCommand]
-        case .changePlaybackPosition:
-            if #available(iOS 9.1, tvOS 9.1, OSX 10.12.1, *) {
-                return [remote.changePlaybackPositionCommand]
-            } else {
-                return []
-            }
-        case .changeRepeatMode:
-            return [remote.changeRepeatModeCommand]
-        case .changeShuffleMode:
-            return [remote.changeShuffleModeCommand]
-        case .rate:
-            return [remote.ratingCommand]
-        case .like:
-            return [remote.likeCommand]
-        case .dislike:
-            return [remote.dislikeCommand]
-        case .bookmark:
-            return [remote.bookmarkCommand]
-        }
-    }
 }
 
+@available(OSX 10.12.1, *)
 extension AudioPlayer {
     
     /// Get or set the preferred intervals for skip forward and backward remote control commands.
@@ -100,7 +59,7 @@ extension AudioPlayer {
     }
     
     func unregisterRemoteControlCommands(_ cmds: [AudioPlayerRemoteCommand]) {
-        for remoteCmd in cmds.flatMap({ cmd in cmd.getMPRemoteCommands() }) {
+        for remoteCmd in cmds.flatMap({ cmd in getMPRemoteCommands(cmd) }) {
             remoteCmd.isEnabled = false
             remoteCmd.removeTarget(self)
         }
@@ -124,7 +83,7 @@ extension AudioPlayer {
     func handleRemoteControlCommandEvent(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         print(#function)
         guard (player?.currentItem) != nil else {
-            if #available(iOS 9.1, tvOS 9.1, OSX 10.12.1, *) {
+            if #available(iOS 9.1, tvOS 9.1, OSX 10.12.2, *) {
                 return .noActionableNowPlayingItem
             } else {
                 return .commandFailed
@@ -177,7 +136,7 @@ extension AudioPlayer {
     
     private var remoteCommandsToRegister: [MPRemoteCommand] {
         get {
-            return remoteCommandsEnabled.flatMap({ cmd in cmd.getMPRemoteCommands() })
+            return remoteCommandsEnabled.flatMap({ cmd in getMPRemoteCommands(cmd) })
         }
     }
     
@@ -223,6 +182,56 @@ extension AudioPlayer {
             self.mode.remove(.shuffle)
         } else {
             self.mode.insert(.shuffle)
+        }
+    }
+    
+    private func getMPRemoteCommands(_ command: AudioPlayerRemoteCommand) -> [MPRemoteCommand] {
+        let remote = MPRemoteCommandCenter.shared()
+        switch command {
+        case .playPause:
+            return [remote.togglePlayPauseCommand, remote.playCommand, remote.pauseCommand]
+        case .stop:
+            return [remote.stopCommand]
+        case .nextTrack:
+            return [remote.nextTrackCommand]
+        case .previousTrack:
+            return [remote.previousTrackCommand]
+        case .skipForward:
+            return [remote.skipForwardCommand]
+        case .skipBackward:
+            return [remote.skipBackwardCommand]
+        case .seekForward:
+            return [remote.seekForwardCommand]
+        case .seekBackward:
+            return [remote.seekBackwardCommand]
+        case .changePlaybackRate:
+            return [remote.changePlaybackRateCommand]
+        case .changePlaybackPosition:
+            if #available(iOS 9.1, tvOS 9.1, OSX 10.12.1, *) {
+                return [remote.changePlaybackPositionCommand]
+            } else {
+                return []
+            }
+        case .changeRepeatMode:
+            if #available(iOS 10, tvOS 10, *) {
+                return [remote.changeRepeatModeCommand]
+            } else {
+                return []
+            }
+        case .changeShuffleMode:
+            if #available(iOS 10, tvOS 10, *) {
+                return [remote.changeShuffleModeCommand]
+            } else {
+                return []
+            }
+        case .rate:
+            return [remote.ratingCommand]
+        case .like:
+            return [remote.likeCommand]
+        case .dislike:
+            return [remote.dislikeCommand]
+        case .bookmark:
+            return [remote.bookmarkCommand]
         }
     }
 }

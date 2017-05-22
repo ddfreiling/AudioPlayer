@@ -235,6 +235,16 @@ public class AudioPlayer: NSObject {
     /// Works on iOS/tvOS 10+, default is 0, which lets `AVPlayer` decide.
     public var preferredForwardBufferDuration = TimeInterval(0)
     
+    @objc(remoteCommandsEnabled)
+    public var objc_remoteCommandsEnabled: [Int] = [AudioPlayerRemoteCommand.changePlaybackPosition.rawValue,
+                                                    AudioPlayerRemoteCommand.previousTrack.rawValue,
+                                                    AudioPlayerRemoteCommand.playPause.rawValue,
+                                                    AudioPlayerRemoteCommand.nextTrack.rawValue] {
+        didSet {
+            remoteCommandsEnabled = objc_remoteCommandsEnabled.map({ AudioPlayerRemoteCommand(rawValue: $0)! })
+        }
+    }
+    
     /// Defines which remote control commands should be enabled. Max shown on iOS is 3 commands.
     public var remoteCommandsEnabled: [AudioPlayerRemoteCommand] = [.changePlaybackPosition, .previousTrack, .playPause, .nextTrack] {
         didSet {

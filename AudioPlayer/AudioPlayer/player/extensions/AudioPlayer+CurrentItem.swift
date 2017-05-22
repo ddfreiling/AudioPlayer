@@ -28,6 +28,24 @@ extension AudioPlayer {
     public var currentItemDuration: TimeInterval? {
         return player?.currentItem?.duration.ap_timeIntervalValue
     }
+    
+    @objc(currentItemProgression)
+    public var objc_currentTime: NSNumber? {
+        if let currentItemProgression = currentItemProgression {
+            return currentItemProgression as NSNumber
+        } else {
+            return nil
+        }
+    }
+    
+    @objc(currentItemDuration)
+    public var objc_currentDuration: NSNumber? {
+        if let currentItemDuration = currentItemDuration {
+            return currentItemDuration as NSNumber
+        } else {
+            return nil
+        }
+    }
 
     /// The current seekable range.
     public var currentItemSeekableRange: TimeRange? {

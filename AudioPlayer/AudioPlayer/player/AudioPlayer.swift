@@ -68,8 +68,7 @@ public class AudioPlayer: NSObject {
                 audioItemEventProducer.startProducingEvents()
                 qualityAdjustmentEventProducer.startProducingEvents()
                 
-                // TODO: Better place to do this?
-                registerRemoteControlHandlers()
+                registerRemoteControlCommands()
             } else {
                 playerEventProducer.player = nil
                 audioItemEventProducer.item = nil
@@ -210,16 +209,15 @@ public class AudioPlayer: NSObject {
         }
     }
     
-    /// Defines which remote control commands should be enabled
-    public var enabledRemoteCommands: [AudioPlayerRemoteCommand] = [.previousTrack, .playPause, .nextTrack] {
+    /// Defines which remote control commands should be enabled. Max shown on iOS is 3 commands.
+    public var remoteCommandsEnabled: [AudioPlayerRemoteCommand] = [.changePlaybackPosition, .previousTrack, .playPause, .nextTrack] {
         didSet {
-            registerRemoteControlHandlers()
+            if #available(OSX 10.12.1, *) {
+                unregisterRemoteControlCommands(oldValue)
+                registerRemoteControlCommands()
+            }
         }
     }
-    
-    /// Defined whether the playback position is changable through the platform remote controls & lock screen. Default value is `true`.
-    /// should be changed *before* items are loaded. TODO: make a didSet that makes it live ?
-    public var remotePlaybackPositionChangeEnabled = true
 
     /// Defines how to behave when the user is seeking through the lockscreen or the control center.
     ///

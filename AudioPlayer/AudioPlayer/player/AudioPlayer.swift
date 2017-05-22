@@ -73,6 +73,7 @@ public class AudioPlayer: NSObject {
                 
                 // Start producing network events, if not already doing so
                 networkEventProducer.startProducingEvents()
+                registerRemoteControlCommands()
             } else {
                 playerEventProducer.player = nil
                 audioItemEventProducer.item = nil
@@ -233,6 +234,16 @@ public class AudioPlayer: NSObject {
     /// Defines the preferred size of the forward buffer for the underlying `AVPlayerItem`.
     /// Works on iOS/tvOS 10+, default is 0, which lets `AVPlayer` decide.
     public var preferredForwardBufferDuration = TimeInterval(0)
+    
+    /// Defines which remote control commands should be enabled. Max shown on iOS is 3 commands.
+    public var remoteCommandsEnabled: [AudioPlayerRemoteCommand] = [.changePlaybackPosition, .previousTrack, .playPause, .nextTrack] {
+        didSet {
+            if #available(OSX 10.12.1, *) {
+                unregisterRemoteControlCommands(oldValue)
+                registerRemoteControlCommands()
+            }
+        }
+    }
 
     /// Defines how to behave when the user is seeking through the lockscreen or the control center.
     ///
@@ -359,12 +370,14 @@ public class AudioPlayer: NSObject {
     func updateNowPlayingInfoCenter() {
         #if os(iOS) || os(tvOS)
             if let item = currentItem {
+                setRemoteControlCommandsEnabled(true)
                 MPNowPlayingInfoCenter.default().ap_update(
                     with: item,
                     duration: currentItemDuration,
                     progression: currentItemProgression,
                     playbackRate: player?.rate ?? 0)
             } else {
+                setRemoteControlCommandsEnabled(false)
                 MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
             }
         #endif

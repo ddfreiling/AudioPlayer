@@ -109,6 +109,9 @@
 		BBEC49BB1EC8D2C400BAB484 /* AudioPlayerBufferingStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB5E356C1EC3738F001BF508 /* AudioPlayerBufferingStrategy.swift */; };
 		BBEC49BC1EC8D3EA00BAB484 /* AudioPlayer+Preload.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3ED56B1EC4993400AA0C30 /* AudioPlayer+Preload.swift */; };
 		BBEC49BD1EC8D3EA00BAB484 /* AudioPlayer+Preload.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB3ED56B1EC4993400AA0C30 /* AudioPlayer+Preload.swift */; };
+		BB8319FE1EC9C66800EFE210 /* AudioPlayer+RemoteControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB8319FD1EC9C66800EFE210 /* AudioPlayer+RemoteControl.swift */; };
+		BB8319FF1EC9DD0900EFE210 /* AudioPlayer+RemoteControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB8319FD1EC9C66800EFE210 /* AudioPlayer+RemoteControl.swift */; };
+		BB831A001EC9DD0A00EFE210 /* AudioPlayer+RemoteControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB8319FD1EC9C66800EFE210 /* AudioPlayer+RemoteControl.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -174,6 +177,7 @@
 		653E18841C353DD0003C0CAB /* Info-tvOS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-tvOS.plist"; sourceTree = "<group>"; };
 		BB3ED56B1EC4993400AA0C30 /* AudioPlayer+Preload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AudioPlayer+Preload.swift"; sourceTree = "<group>"; };
 		BB5E356C1EC3738F001BF508 /* AudioPlayerBufferingStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerBufferingStrategy.swift; sourceTree = "<group>"; };
+		BB8319FD1EC9C66800EFE210 /* AudioPlayer+RemoteControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AudioPlayer+RemoteControl.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -338,6 +342,7 @@
 			isa = PBXGroup;
 			children = (
 				46DE85091CAB067400F00287 /* AudioPlayer+Control.swift */,
+				BB8319FD1EC9C66800EFE210 /* AudioPlayer+RemoteControl.swift */,
 				46DE850D1CAB07DE00F00287 /* AudioPlayer+Queue.swift */,
 				BB3ED56B1EC4993400AA0C30 /* AudioPlayer+Preload.swift */,
 				46DE85111CAB0A3200F00287 /* AudioPlayer+CurrentItem.swift */,
@@ -598,6 +603,7 @@
 				467D611F1CB1119600D50807 /* AudioPlayer+QualityAdjustmentEvent.swift in Sources */,
 				460FA1E51CC1814500156DFC /* AudioPlayer+RetryEvent.swift in Sources */,
 				BB3ED56C1EC4993400AA0C30 /* AudioPlayer+Preload.swift in Sources */,
+				BB8319FE1EC9C66800EFE210 /* AudioPlayer+RemoteControl.swift in Sources */,
 				46DE850A1CAB067400F00287 /* AudioPlayer+Control.swift in Sources */,
 				460FA1DF1CBA946F00156DFC /* RetryEventProducer.swift in Sources */,
 			);
@@ -634,6 +640,7 @@
 				46DE85101CAB07DE00F00287 /* AudioPlayer+Queue.swift in Sources */,
 				462FC8051C9D7C33005A674B /* AudioPlayerMode.swift in Sources */,
 				46D3A2E31C8F480A00635FE4 /* EventProducer.swift in Sources */,
+				BB831A001EC9DD0A00EFE210 /* AudioPlayer+RemoteControl.swift in Sources */,
 				46D3A2E71C8F489700635FE4 /* PlayerEventProducer.swift in Sources */,
 				46DE850C1CAB067400F00287 /* AudioPlayer+Control.swift in Sources */,
 				46D3A2EB1C8F4A7B00635FE4 /* NetworkEventProducer.swift in Sources */,
@@ -690,6 +697,7 @@
 				467D61201CB1119600D50807 /* AudioPlayer+QualityAdjustmentEvent.swift in Sources */,
 				460FA1E61CC1814500156DFC /* AudioPlayer+RetryEvent.swift in Sources */,
 				BBEC49BC1EC8D3EA00BAB484 /* AudioPlayer+Preload.swift in Sources */,
+				BB8319FF1EC9DD0900EFE210 /* AudioPlayer+RemoteControl.swift in Sources */,
 				46DE850B1CAB067400F00287 /* AudioPlayer+Control.swift in Sources */,
 				460FA1E01CBA946F00156DFC /* RetryEventProducer.swift in Sources */,
 			);

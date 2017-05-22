@@ -17,20 +17,17 @@ extension AudioPlayer {
     func handlePlayerEvent(from producer: EventProducer, with event: PlayerEventProducer.PlayerEvent) {
         switch event {
         case .endedPlaying(let error):
-            if let error = error {
-                if !currentItemIsOffline,
-                    isInternetConnectionError(error) || isEndedEarlyError(error) {
-                    // While playing online content we got an internet error or
-                    // ended playing the item before it was finished (usually also due to connection loss).
-                    stateWhenConnectionLost = .playing
-                    state = .waitingForConnection
-                } else {
-                    // Some unrecoverable error occured while playing, set failed state and
-                    // let the retry handler try again if it's enabled.
-                    
-                    state = .failed
-                    failedError = .foundationError(error)
-                }
+            if !currentItemIsOffline,
+                isInternetConnectionError(error) || (!isOnline && isEndedEarlyError(error)) {
+                // While playing online content we got an internet error or
+                // ended playing the item before it was finished while offline (likely also due to connection loss).
+                stateWhenConnectionLost = .playing
+                state = .waitingForConnection
+            } else if let error = error, !isEndedEarlyError(error) {
+                // Some unrecoverable error occured while playing, set failed state and
+                // let the retry handler try again if it's enabled.
+                state = .failed
+                failedError = .foundationError(error)
             } else {
                 if let currentItem = self.currentItem {
                     delegate?.audioPlayer?(self, finishedPlaying: currentItem)
@@ -154,7 +151,7 @@ extension AudioPlayer {
 }
 
 //TODO: Refactor to better location
-func isInternetConnectionError(_ error: Error) -> Bool {
+func isInternetConnectionError(_ error: Error?) -> Bool {
     guard let urlErr = error as? URLError else {
         return false
     }
@@ -162,6 +159,6 @@ func isInternetConnectionError(_ error: Error) -> Bool {
         || urlErr.code == URLError.Code.networkConnectionLost
 }
 
-func isEndedEarlyError(_ error: Error) -> Bool {
+func isEndedEarlyError(_ error: Error?) -> Bool {
     return error as? EndedError == EndedError.ItemEndedEarly
 }

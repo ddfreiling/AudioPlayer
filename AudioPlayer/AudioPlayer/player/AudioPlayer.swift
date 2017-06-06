@@ -189,6 +189,12 @@ public class AudioPlayer: NSObject {
             retryEventProducer.retryTimeout = newValue
         }
     }
+    
+    /// Defines which audio session category to set. Default value is `AVAudioSessionCategoryPlayback`.
+    public var audioSessionCategory = AVAudioSessionCategoryPlayback
+    
+    /// Defines which audio session mode to set. Default value is `AVAudioSessionModeDefault`.
+    public var audioSessionMode = AVAudioSessionModeDefault
 
     /// Defines whether the player should resume after a system interruption or not. Default value is `true`.
     public var resumeAfterInterruption = true
@@ -398,10 +404,15 @@ public class AudioPlayer: NSObject {
     /// - Parameter active: A boolean value indicating whether the audio session should be set to active or not.
     func setAudioSession(active: Bool) {
         #if os(iOS) || os(tvOS)
-            if (active) {
-                _ = try? AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+            do {
+                if (active) {
+                    try AVAudioSession.sharedInstance().setCategory(audioSessionCategory)
+                    try AVAudioSession.sharedInstance().setMode(audioSessionMode)
+                }
+                try AVAudioSession.sharedInstance().setActive(active)
+            } catch {
+                print("AVAudioSession setActive(\(active)) Error: \(error.localizedDescription)")
             }
-            _ = try? AVAudioSession.sharedInstance().setActive(active)
         #endif
     }
 

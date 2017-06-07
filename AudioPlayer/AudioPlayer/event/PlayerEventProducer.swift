@@ -269,9 +269,9 @@ class PlayerEventProducer: NSObject, EventProducer {
     ///
     /// - Parameter note: The notification information.
     @objc fileprivate func playerItemDidEnd(note: NSNotification) {
-        if let currentItem = player?.currentItem {
-            if currentItem.duration.seconds.isNormal && currentItem.currentTime().seconds < currentItem.duration.seconds {
-                // AVPlayer thinks we are at end, but we did not actually play the full duration.
+        if let _ = player?.currentItem {
+            if currentItemEndedBeforeDuration() {
+                // AVPlayer sent playerItemDidEnd, but duration and currentTime has a diff larger than 1 second
                 // This could happen when internet connection is lost during playback
                 eventListener?.onEvent(PlayerEvent.endedPlaying(EndedError.ItemEndedEarly), generetedBy: self)
             } else {
@@ -281,4 +281,15 @@ class PlayerEventProducer: NSObject, EventProducer {
         }
         
     }
+    
+    fileprivate func currentItemEndedBeforeDuration() -> Bool {
+        guard let currentItem = player?.currentItem,
+            currentItem.duration.seconds.isNormal else {
+                return false
+        }
+        let timeDiff = currentItem.duration.seconds - currentItem.currentTime().seconds
+        return timeDiff > PlayerEventProducer.AcceptableItemEndedDifference
+    }
+    
+    private static var AcceptableItemEndedDifference: Double = 5.0
 }

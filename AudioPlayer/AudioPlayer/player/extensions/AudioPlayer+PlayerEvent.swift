@@ -64,7 +64,7 @@ extension AudioPlayer {
             if let currentItem = currentItem, let currentItemLoadedRange = currentItemLoadedRange {
                 delegate?.audioPlayer?(self, didLoadEarliest: currentItemLoadedRange.earliest, latest: currentItemLoadedRange.latest, for: currentItem)
                 
-                if bufferingStrategy == .playWhenPreferredBufferDurationFull && state == .buffering,
+                if state == .buffering && bufferingStrategy == .playWhenPreferredBufferDurationFull,
                     let currentItemLoadedAhead = currentItemLoadedAhead,
                     currentItemLoadedAhead.isNormal,
                     currentItemLoadedAhead >= self.preferredBufferDurationBeforePlayback {

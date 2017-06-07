@@ -21,8 +21,9 @@ extension AudioPlayer {
 
         //We don't wan't to change the state to Playing in case it's Buffering. That
         //would be a lie.
+        //If streaming go to buffering state, allowing non-default buffering strategies to work
         if !state.isPlaying && !state.isBuffering {
-            state = .playing
+            state = currentItemIsOffline ? .playing : .buffering
         }
 
         retryEventProducer.startProducingEvents()

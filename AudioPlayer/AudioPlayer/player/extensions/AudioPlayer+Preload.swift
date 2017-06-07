@@ -19,7 +19,7 @@ extension AudioPlayer {
     
     func getAVURLAsset(forUrl: URL) -> AVURLAsset {
         if let asset = cachedAssets[forUrl],
-               asset.isPlayable {
+               !assetHasFailed(asset) {
             return asset
         } else {
             ///See options: https://developer.apple.com/reference/avfoundation/avurlasset/initialization_options
@@ -52,7 +52,7 @@ extension AudioPlayer {
     }
     
     func preloadNextItemAsset() {
-        guard hasNext, let queue = queue else {
+        guard let queue = queue, hasNext else {
             return
         }
         let nextPosition = queue.nextPosition,
@@ -73,12 +73,23 @@ extension AudioPlayer {
         }
     }
     
+    private func assetHasFailed(_ asset: AVURLAsset) -> Bool {
+        for key in AudioPlayer.assetPreloadKeys {
+            var error: NSError?
+            let result = asset.statusOfValue(forKey: key, error: &error)
+            if (result == .failed || result == .cancelled || error != nil) {
+                return true
+            }
+        }
+        return false
+    }
+    
     private func assetPreloadKeysAreLoaded(asset: AVURLAsset) -> Bool {
         for key in AudioPlayer.assetPreloadKeys {
             var error: NSError?
             let result = asset.statusOfValue(forKey: key, error: &error)
             if (result != .loaded || error != nil) {
-                print("AVAsset failed to load key '\(key)': (\(String(describing: result))) \(String(describing: error?.localizedDescription))")
+                print("AVAsset failed to load key '\(key)': (\(String(describing: result))) \(error?.localizedDescription ?? "")")
                 return false
             }
         }

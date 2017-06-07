@@ -86,7 +86,6 @@ extension AudioPlayer {
                         player?.rate = 0
                         state = .paused
                     }
-                    backgroundHandler.endBackgroundTask()
                 }
 
                 //Then we can call the didUpdateProgressionTo: delegate method
@@ -110,7 +109,6 @@ extension AudioPlayer {
 
             //TODO: where to start?
             retryEventProducer.stopProducingEvents()
-            backgroundHandler.endBackgroundTask()
 
         case .routeChanged:
             //In some route changes, the player pause automatically
@@ -142,7 +140,6 @@ extension AudioPlayer {
             } else {
                 state = .waitingForConnection
             }
-            backgroundHandler.beginBackgroundTask()
 
         default:
             break

@@ -30,7 +30,6 @@ extension AudioPlayer {
                     }
 
                     state = .waitingForConnection
-                    backgroundHandler.beginBackgroundTask()
                 }
             }
 

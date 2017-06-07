@@ -99,11 +99,9 @@ public class AudioPlayer: NSObject {
                 let info = currentItem.url(for: currentQuality)
                 if isOnline || info.url.ap_isOfflineURL {
                     state = .buffering
-                    backgroundHandler.beginBackgroundTask()
                 } else {
                     stateWhenConnectionLost = .buffering
                     state = .waitingForConnection
-                    backgroundHandler.beginBackgroundTask()
                     return
                 }
                 
@@ -320,12 +318,12 @@ public class AudioPlayer: NSObject {
             updateNowPlayingInfoCenter()
 
             if state != oldValue {
-                if case .buffering = state {
-                    backgroundHandler.beginBackgroundTask()
-                } else if case .buffering = oldValue {
+                if [.buffering, .waitingForConnection].contains(oldValue) {
                     backgroundHandler.endBackgroundTask()
                 }
-
+                if [.buffering, .waitingForConnection].contains(state) {
+                    backgroundHandler.beginBackgroundTask()
+                }
                 delegate?.audioPlayer?(self, didChangeStateFrom: oldValue, to: state)
             }
         }

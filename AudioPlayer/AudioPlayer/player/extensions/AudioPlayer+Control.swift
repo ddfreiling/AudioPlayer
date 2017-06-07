@@ -14,6 +14,9 @@ import CoreMedia
 extension AudioPlayer {
     /// Resumes the player.
     public func resume() {
+        //Pause initiates a background task, end it on resume
+        backgroundHandler.endBackgroundTask()
+        
         player?.rate = rate
 
         //We don't wan't to change the state to Playing in case it's Buffering. That
@@ -46,7 +49,6 @@ extension AudioPlayer {
             player?.playImmediately(atRate: rate)
             
             retryEventProducer.stopProducingEvents()
-            backgroundHandler.endBackgroundTask()
         }
     }
 

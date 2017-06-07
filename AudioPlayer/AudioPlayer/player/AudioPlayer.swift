@@ -58,7 +58,7 @@ public class AudioPlayer: NSObject {
     var player: AVPlayer? {
         didSet {
             if #available(OSX 10.11, *) {
-                player?.allowsExternalPlayback = false
+                player?.allowsExternalPlayback = allowExternalPlayback
             }
             player?.volume = volume
             player?.rate = rate
@@ -189,6 +189,9 @@ public class AudioPlayer: NSObject {
             retryEventProducer.retryTimeout = newValue
         }
     }
+    
+    /// Defines whether external playback to AirPlay devices is enabled. Default value is `true`
+    public var allowExternalPlayback = true
     
     /// Defines which audio session category to set. Default value is `AVAudioSessionCategoryPlayback`.
     public var audioSessionCategory = AVAudioSessionCategoryPlayback

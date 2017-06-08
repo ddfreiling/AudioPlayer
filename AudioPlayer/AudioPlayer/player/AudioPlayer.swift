@@ -121,7 +121,7 @@ public class AudioPlayer: NSObject {
                     delegate?.audioPlayer?(self, willStartPlaying: currentItem)
                 }
                 player?.rate = rate
-            } else {
+            } else if (!state.isStopped) {
                 stop()
             }
         }

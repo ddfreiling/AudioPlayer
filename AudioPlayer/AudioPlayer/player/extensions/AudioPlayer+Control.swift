@@ -87,15 +87,16 @@ extension AudioPlayer {
             player?.replaceCurrentItem(with: nil)
             player = nil
         }
+        
+        state = .stopped
+        setAudioSession(active: false)
+        
         if let _ = currentItem {
             currentItem = nil
         }
         if let _ = queue {
             queue = nil
         }
-
-        state = .stopped
-        setAudioSession(active: false)
     }
 
     /// Seeks to a specific time.

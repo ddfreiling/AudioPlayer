@@ -20,11 +20,13 @@ extension AudioPlayer {
     func getAVURLAsset(forUrl: URL) -> AVURLAsset {
         if let asset = cachedAssets[forUrl],
                !assetHasFailed(asset) {
+            KDEDebug("getAVURLAsset -- cached")
             return asset
         } else {
             ///See options: https://developer.apple.com/reference/avfoundation/avurlasset/initialization_options
             let asset = AVURLAsset(url: forUrl)
             cachedAssets[forUrl] = asset
+            KDEDebug("getAVURLAsset -- new")
             return asset
         }
     }
@@ -62,13 +64,13 @@ extension AudioPlayer {
             // Next item has already been preloaded
             return
         }
-        print("preloading queue idx: \(nextPosition)")
+        KDEDebug("preloading queue idx: \(nextPosition)")
         let asset = getAVURLAsset(forUrl: urlInfo.url)
         preloadItemAsset(asset: asset) { asset in
             if (asset == nil) {
-                print("error preloading queue idx: \(nextPosition)")
+                KDEDebug("error preloading queue idx: \(nextPosition)")
             } else {
-                print("preloaded queue idx: \(nextPosition)!")
+                KDEDebug("preloaded queue idx: \(nextPosition)!")
             }
         }
     }
@@ -89,7 +91,7 @@ extension AudioPlayer {
             var error: NSError?
             let result = asset.statusOfValue(forKey: key, error: &error)
             if (result != .loaded || error != nil) {
-                print("AVAsset failed to load key '\(key)': (\(String(describing: result))) \(error?.localizedDescription ?? "")")
+                KDEDebug("AVAsset failed to load key '\(key)': (\(String(describing: result))) \(error?.localizedDescription ?? "")")
                 return false
             }
         }

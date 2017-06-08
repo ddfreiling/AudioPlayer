@@ -92,7 +92,7 @@ public class AudioPlayer: NSObject {
                 player?.rate = 0
                 player = nil
 
-                //Ensures the audio session got started
+                //Ensures the audio session is running
                 setAudioSession(active: true)
 
                 //Sets new state
@@ -405,6 +405,7 @@ public class AudioPlayer: NSObject {
     /// - Parameter active: A boolean value indicating whether the audio session should be set to active or not.
     func setAudioSession(active: Bool) {
         #if os(iOS) || os(tvOS)
+            KDEDebug("AVAudioSession setActive(\(active))")
             do {
                 if (active) {
                     try AVAudioSession.sharedInstance().setCategory(audioSessionCategory)
@@ -412,7 +413,7 @@ public class AudioPlayer: NSObject {
                 }
                 try AVAudioSession.sharedInstance().setActive(active)
             } catch {
-                print("AVAudioSession setActive(\(active)) Error: \(error.localizedDescription)")
+                KDEDebug("AVAudioSession setActive(\(active)) Error: \(error.localizedDescription)")
             }
         #endif
     }

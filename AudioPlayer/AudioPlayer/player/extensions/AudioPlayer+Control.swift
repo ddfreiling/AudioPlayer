@@ -113,6 +113,7 @@ extension AudioPlayer {
                      toleranceBefore: CMTime = kCMTimePositiveInfinity,
                      toleranceAfter: CMTime = kCMTimePositiveInfinity,
                      completionHandler: ((Bool) -> Void)? = nil) {
+        KDEDebug("seek to \(time)")
         guard let earliest = currentItemSeekableRange?.earliest,
             let latest = currentItemSeekableRange?.latest else {
                 //In case we don't have a valid `seekableRange`, although this *shouldn't* happen

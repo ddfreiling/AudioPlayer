@@ -143,8 +143,6 @@ public extension Reachability {
     
     // MARK: - *** Notifier methods ***
     func startNotifier() throws {
-        print(#function)
-        
         guard let reachabilityRef = reachabilityRef, !notifierRunning else { return }
         
         var context = SCNetworkReachabilityContext(version: 0, info: nil, retain: nil, release: nil, copyDescription: nil)
@@ -168,7 +166,6 @@ public extension Reachability {
     }
     
     func stopNotifier() {
-        print(#function)
         defer { notifierRunning = false }
         guard let reachabilityRef = reachabilityRef else { return }
         
@@ -231,8 +228,6 @@ public extension Reachability {
 fileprivate extension Reachability {
     
     func reachabilityChanged() {
-        print(#function)
-        
         let flags = reachabilityFlags
         
         guard previousFlags != flags else { return }

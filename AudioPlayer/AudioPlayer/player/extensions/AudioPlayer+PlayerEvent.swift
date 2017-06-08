@@ -36,12 +36,14 @@ extension AudioPlayer {
             }
 
         case .interruptionBegan where state.isPlaying || state.isBuffering:
+            KDEDebug("Interruption Began - Pause!")
             //We pause the player when an interruption is detected
             backgroundHandler.beginBackgroundTask()
             pausedForInterruption = true
             pause()
 
         case .interruptionEnded(let shouldResume) where pausedForInterruption:
+            KDEDebug("Interruption Ended - shouldResume=\(shouldResume)")
             if resumeAfterInterruption && shouldResume {
                 resume()
             }
@@ -96,6 +98,7 @@ extension AudioPlayer {
 
         case .readyToPlay:
             //There is enough data in the buffer
+            KDEDebug("readyToPlay - shouldResumePlaying? \(shouldResumePlaying)")
             if shouldResumePlaying {
                 stateBeforeBuffering = nil
                 state = .playing

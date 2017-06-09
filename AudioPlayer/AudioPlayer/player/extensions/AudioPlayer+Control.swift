@@ -14,6 +14,9 @@ import CoreMedia
 extension AudioPlayer {
     /// Resumes the player.
     public func resume() {
+        //Ensure pause flag is no longer set
+        pausedForInterruption = false
+
         //Pause initiates a background task, end it on resume
         backgroundHandler.endBackgroundTask()
         

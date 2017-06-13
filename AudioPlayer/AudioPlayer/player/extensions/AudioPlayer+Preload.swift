@@ -11,7 +11,7 @@ import AVFoundation
 
 extension AudioPlayer {
     
-    public static let assetPreloadKeys = ["tracks", "playable"]
+    private static let assetPreloadKeys = ["tracks", "playable"]
     
     public func clearAssetCache() {
         cachedAssets = [:]
@@ -20,13 +20,13 @@ extension AudioPlayer {
     func getAVURLAsset(forUrl: URL) -> AVURLAsset {
         if let asset = cachedAssets[forUrl],
                !assetHasFailed(asset) {
-            KDEDebug("getAVURLAsset -- cached")
+            KDEDebug("getAVURLAsset: cached")
             return asset
         } else {
             ///See options: https://developer.apple.com/reference/avfoundation/avurlasset/initialization_options
             let asset = AVURLAsset(url: forUrl)
             cachedAssets[forUrl] = asset
-            KDEDebug("getAVURLAsset -- new")
+            KDEDebug("getAVURLAsset: new")
             return asset
         }
     }
@@ -42,14 +42,13 @@ extension AudioPlayer {
     }
     
     func preloadItemAsset(asset: AVURLAsset, onComplete: @escaping (AVURLAsset?) -> Void) {
-        asset.loadValuesAsynchronously(forKeys: AudioPlayer.assetPreloadKeys) {
-            if (self.assetPreloadKeysAreLoaded(asset: asset) == false) {
-                //loading failed, invalidate cached asset
-                self.cachedAssets.removeValue(forKey: asset.url)
+        asset.loadValuesAsynchronously(forKeys: AudioPlayer.assetPreloadKeys) { [weak self] in
+            guard let this = self, this.assetPreloadKeysAreLoaded(asset: asset) else {
+                self?.cachedAssets.removeValue(forKey: asset.url)
                 onComplete(nil)
-            } else {
-                onComplete(asset)
+                return
             }
+            onComplete(asset)
         }
     }
     
@@ -61,14 +60,14 @@ extension AudioPlayer {
             item = queue.items[nextPosition],
             urlInfo = item.highestQualityURL
         if cachedAssets[urlInfo.url] != nil {
-            // Next item has already been preloaded
+            // Next item has been or is already being preloaded
             return
         }
-        KDEDebug("preloading queue idx: \(nextPosition)")
+        KDEDebug("preload queue idx: \(nextPosition)")
         let asset = getAVURLAsset(forUrl: urlInfo.url)
         preloadItemAsset(asset: asset) { asset in
             if (asset == nil) {
-                KDEDebug("error preloading queue idx: \(nextPosition)")
+                KDEDebug("ERROR preloading queue idx: \(nextPosition)")
             } else {
                 KDEDebug("preloaded queue idx: \(nextPosition)!")
             }

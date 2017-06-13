@@ -67,6 +67,7 @@ class PlayerEventProducer: NSObject, EventProducer {
     enum PlayerEvent: Event {
         case startedBuffering
         case readyToPlay
+        case playbackLikelyToKeepUp
         case loadedMoreRange(CMTime, CMTime)
         case loadedMetadata([AVMetadataItem])
         case loadedDuration(CMTime)
@@ -204,11 +205,14 @@ class PlayerEventProducer: NSObject, EventProducer {
                 eventListener?.onEvent(PlayerEvent.startedBuffering, generetedBy: self)
 
             case "currentItem.playbackLikelyToKeepUp" where currentItem.isPlaybackLikelyToKeepUp:
-                eventListener?.onEvent(PlayerEvent.readyToPlay, generetedBy: self)
+                eventListener?.onEvent(PlayerEvent.playbackLikelyToKeepUp, generetedBy: self)
 
             case "currentItem.status" where currentItem.status == .failed:
                 eventListener?.onEvent(
                     PlayerEvent.endedPlaying(currentItem.error), generetedBy: self)
+                
+            case "currentItem.status" where currentItem.status == .readyToPlay:
+                eventListener?.onEvent(PlayerEvent.readyToPlay, generetedBy: self)
 
             case "currentItem.loadedTimeRanges":
                 if let range = currentItem.loadedTimeRanges.last?.timeRangeValue {

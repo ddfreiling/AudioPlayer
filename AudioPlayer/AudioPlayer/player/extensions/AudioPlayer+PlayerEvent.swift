@@ -6,7 +6,7 @@
 //  Copyright © 2016 Kevin Delannoy. All rights reserved.
 //
 
-import Foundation
+import CoreMedia
 
 extension AudioPlayer {
     /// Handles player events.
@@ -28,6 +28,10 @@ extension AudioPlayer {
                 // let the retry handler try again if it's enabled.
                 state = .failed
                 failedError = .foundationError(error)
+                
+                // We might have had a queuedSeek for this item when it failed
+                queuedSeek = 0
+                queuedSeekCompletionHandler = nil
             } else {
                 if let currentItem = self.currentItem {
                     delegate?.audioPlayer?(self, finishedPlaying: currentItem)
@@ -98,7 +102,16 @@ extension AudioPlayer {
 
         case .readyToPlay:
             //There is enough data in the buffer
-            KDEDebug("readyToPlay - shouldResumePlaying? \(shouldResumePlaying)")
+            KDEDebug("readyToPlay")
+            if (queuedSeek > 0) {
+                seek(to: queuedSeek, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero, completionHandler: queuedSeekCompletionHandler)
+                queuedSeek = 0
+                queuedSeekCompletionHandler = nil
+            }
+
+        case .playbackLikelyToKeepUp:
+            //Current item has buffered enough to keep playing without interruption
+            KDEDebug("playbackLikelyToKeepUp - shouldResumePlaying? \(shouldResumePlaying)")
             if shouldResumePlaying {
                 stateBeforeBuffering = nil
                 state = .playing

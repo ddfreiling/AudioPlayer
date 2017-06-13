@@ -191,14 +191,20 @@ extension AudioPlayer {
             updateNowPlayingInfoCenter()
             return
         }
-        guard player?.currentItem?.status == .readyToPlay else {
+        if (player?.currentItem?.status == .readyToPlay) {
+            player?.seek(to: CMTime(timeInterval: time), toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
+                completionHandler(finished)
+                self?.updateNowPlayingInfoCenter()
+            }
+        } else if (player?.currentItem?.status == .unknown) {
+            KDEDebug("seekSafely: currentItem not loaded yet, queue the seek for when ready")
+            // status is unknown, queue the seek for when status might change to ready
+            queuedSeek = time
+            queuedSeekCompletionHandler = completionHandler
+        } else {
+            KDEDebug("seekSafely: currentItem is failed, cannot seek")
+            // seek is not possible
             completionHandler(false)
-            return
         }
-        player?.seek(to: CMTime(timeInterval: time), toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter,
-                     completionHandler: { [weak self] finished in
-                        completionHandler(finished)
-                        self?.updateNowPlayingInfoCenter()
-        })
     }
 }

@@ -204,10 +204,12 @@ extension AudioPlayer {
                 self?.updateNowPlayingInfoCenter()
             }
         } else if (player?.currentItem?.status == .unknown) {
-            KDEDebug("seekSafely: currentItem not loaded yet, queue the seek for when ready")
-            // status is unknown, queue the seek for when status might change to ready
-            queuedSeek = time
-            queuedSeekCompletionHandler = completionHandler
+            KDEDebug("seekSafely: currentItem not loaded yet, queue the seek for when it's ready")
+            // status is unknown, queue the seek for when status changes to ready
+            queuedSeek = SeekOperation(time: time,
+                                       toleranceBefore: toleranceBefore,
+                                       toleranceAfter: toleranceAfter,
+                                       completionHandler: completionHandler)
         } else {
             KDEDebug("seekSafely: currentItem is failed, cannot seek")
             // seek is not possible

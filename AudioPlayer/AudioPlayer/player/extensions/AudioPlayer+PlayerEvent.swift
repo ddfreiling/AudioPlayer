@@ -30,8 +30,7 @@ extension AudioPlayer {
                 failedError = .foundationError(error)
                 
                 // We might have had a queuedSeek for this item when it failed
-                queuedSeek = 0
-                queuedSeekCompletionHandler = nil
+                queuedSeek = nil
             } else {
                 if let currentItem = self.currentItem {
                     delegate?.audioPlayer?(self, finishedPlaying: currentItem)
@@ -109,11 +108,13 @@ extension AudioPlayer {
         case .readyToPlay:
             //There is enough data in the buffer
             KDEDebug("readyToPlay")
-            if (queuedSeek > 0) {
-                seek(to: queuedSeek, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero, completionHandler: queuedSeekCompletionHandler)
-                // TODO: Make queuedSeek a single variable that contains time, tolerances and completionHandler.
-                queuedSeek = 0
-                queuedSeekCompletionHandler = nil
+            if let seekOperation = queuedSeek {
+                seek(to: seekOperation.time,
+                     byAdaptingTimeToFitSeekableRanges: seekOperation.adaptToFitSeekableRanges,
+                     toleranceBefore: seekOperation.toleranceBefore,
+                     toleranceAfter: seekOperation.toleranceAfter,
+                     completionHandler: seekOperation.completionHandler)
+                queuedSeek = nil
             }
 
         case .playbackLikelyToKeepUp:

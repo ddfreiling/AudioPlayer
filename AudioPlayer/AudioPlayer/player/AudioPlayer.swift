@@ -339,11 +339,8 @@ public class AudioPlayer: NSObject {
 
     // MARK: Private properties
     
-    /// A TimeInterval that we will seek to when the currentItem is ready to play.
-    var queuedSeek: TimeInterval = 0
-    
-    /// An optional completion handler for the above queued seek.
-    var queuedSeekCompletionHandler: ((Bool) -> Void)? = nil
+    /// A SeekOperation which will be executed once currentItem is ready to play.
+    var queuedSeek: SeekOperation?
 
     /// A boolean value indicating whether the player has been paused because of a system interruption.
     var pausedForInterruption = false

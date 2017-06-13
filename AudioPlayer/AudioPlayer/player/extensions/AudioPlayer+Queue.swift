@@ -38,19 +38,31 @@ extension AudioPlayer {
     ///
     /// - Parameters:
     ///   - items: The items to play.
-    ///   - index: The index to start the player with.
+    ///   - startAtIndex: The index to start the player with.
     public func play(items: [AudioItem], startAtIndex index: Int = 0) {
-        if !items.isEmpty {
-            cachedAssets = [:]
-            queue = AudioItemQueue(items: items, mode: mode)
-            if let realIndex = queue?.queue.index(of: items[index]) {
-                queue?.nextPosition = realIndex
-            }
-            currentItem = queue?.nextItem()
-        } else {
+        guard !items.isEmpty, 0 <= index, index < items.count else {
+            KDEDebug("invalid arguments for play(), items.count=\(items.count), index=\(index)")
             stop()
             queue = nil
+            return
         }
+        //Remove cached assets that are not in the new playlist
+        if (cachedAssets.count > 0) {
+            let newUrls = items.flatMap { $0.soundURLs.map { $0.value } }
+            for (url, _) in cachedAssets {
+                if !newUrls.contains(url) {
+                    cachedAssets.removeValue(forKey: url)
+                    KDEDebug("Removed from cached assets: \(url.absoluteURL)")
+                }
+            }
+        }
+        //Setup the new queue
+        queue = AudioItemQueue(items: items, mode: mode)
+        if let realIndex = queue?.queue.index(of: items[index]) {
+            queue?.nextPosition = realIndex
+        }
+        //Set the new currentItem
+        currentItem = queue?.nextItem()
     }
 
     /// Adds an item at the end of the queue. If queue is empty and player isn't playing, the behaviour will be similar

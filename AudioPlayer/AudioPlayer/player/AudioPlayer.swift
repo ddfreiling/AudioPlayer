@@ -94,6 +94,10 @@ public class AudioPlayer: NSObject {
 
                 //Ensures the audio session is running
                 setAudioSession(active: true)
+                
+                //Reset special state flags
+                pausedForInterruption = false
+                queuedSeek = nil
 
                 //Sets new state
                 let info = currentItem.url(for: currentQuality)
@@ -104,11 +108,6 @@ public class AudioPlayer: NSObject {
                     state = .waitingForConnection
                     return
                 }
-                
-                //Reset special state flags
-                pausedForInterruption = false
-                queuedSeek = 0
-                queuedSeekCompletionHandler = nil
                 
                 //Create new AVPlayerItem
                 let playerItem = getAVPlayerItem(forUrl: info.url)

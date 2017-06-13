@@ -79,4 +79,8 @@ extension AudioPlayer {
         }
         return nil
     }
+    
+    public var currentItemIsReady: Bool {
+        return player?.currentItem?.status == .readyToPlay
+    }
 }

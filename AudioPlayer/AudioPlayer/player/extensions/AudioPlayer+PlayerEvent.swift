@@ -111,6 +111,7 @@ extension AudioPlayer {
             KDEDebug("readyToPlay")
             if (queuedSeek > 0) {
                 seek(to: queuedSeek, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero, completionHandler: queuedSeekCompletionHandler)
+                // TODO: Make queuedSeek a single variable that contains time, tolerances and completionHandler.
                 queuedSeek = 0
                 queuedSeekCompletionHandler = nil
             }

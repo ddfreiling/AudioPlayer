@@ -97,6 +97,8 @@ public class AudioPlayer: NSObject {
                 
                 //Reset special state flags
                 pausedForInterruption = false
+                stateBeforeBuffering = nil
+                stateWhenConnectionLost = nil
                 queuedSeek = nil
 
                 //Sets new state

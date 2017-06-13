@@ -49,8 +49,12 @@ extension AudioPlayer {
     /// Starts playing the current item immediately. Works on iOS/tvOS 10+ and macOS 10.12+
     func playImmediately() {
         if #available(iOS 10.0, tvOS 10.0, OSX 10.12, *) {
+            //NOTE: No need to do anything if we're already playing
+            guard let player = player, player.timeControlStatus != .playing else {
+                return
+            }
             self.state = .playing
-            player?.playImmediately(atRate: rate)
+            player.playImmediately(atRate: rate)
             
             retryEventProducer.stopProducingEvents()
         }

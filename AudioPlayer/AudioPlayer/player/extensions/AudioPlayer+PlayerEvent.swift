@@ -70,10 +70,16 @@ extension AudioPlayer {
             if let currentItem = currentItem, let currentItemLoadedRange = currentItemLoadedRange {
                 delegate?.audioPlayer?(self, didLoadEarliest: currentItemLoadedRange.earliest, latest: currentItemLoadedRange.latest, for: currentItem)
                 
-                if state == .buffering && bufferingStrategy == .playWhenPreferredBufferDurationFull,
-                    let currentItemLoadedAhead = currentItemLoadedAhead,
-                    currentItemLoadedAhead.isNormal,
-                    currentItemLoadedAhead >= self.preferredBufferDurationBeforePlayback {
+                // NOTE: We also play immediately if we are in playing state,
+                // as it does nothing if timeControlStatus is already .playing.
+                // After a seek we could be in .playing state, but not started yet because of default buffering strategy
+                // TODO: seek should set state = .buffering if applicable
+                
+                if bufferingStrategy == .playWhenPreferredBufferDurationFull,
+                    state == .buffering || state == .playing,
+                    let loadedAhead = currentItemLoadedAhead,
+                    loadedAhead.isNormal,
+                    loadedAhead >= self.preferredBufferDurationBeforePlayback {
                         playImmediately()
                 }
             }

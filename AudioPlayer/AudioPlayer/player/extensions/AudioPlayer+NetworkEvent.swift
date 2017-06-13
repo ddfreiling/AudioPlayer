@@ -42,7 +42,7 @@ extension AudioPlayer {
             }
 
             let isAllowedToRestart = lossDate.timeIntervalSinceNow < maximumConnectionLossTime
-            let wasPlayingBeforeLoss = !stateWhenLost.isStopped
+            let wasPlayingBeforeLoss = !stateWhenLost.isStopped && !stateWhenLost.isPaused
 
             if isAllowedToRestart && wasPlayingBeforeLoss {
                 retryOrPlayNext()

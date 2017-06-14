@@ -20,7 +20,7 @@ extension AudioPlayer {
         //Pause initiates a background task, end it on resume
         backgroundHandler.endBackgroundTask()
         
-        //Ensures the audio session is running
+        //Ensures the audio session is active
         setAudioSession(active: true)
         
         player?.rate = rate

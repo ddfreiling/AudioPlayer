@@ -92,7 +92,7 @@ public class AudioPlayer: NSObject {
                 player?.rate = 0
                 player = nil
 
-                //Ensures the audio session is running
+                //Ensures the audio session is active
                 setAudioSession(active: true)
                 
                 //Reset special state flags

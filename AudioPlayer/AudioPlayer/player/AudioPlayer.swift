@@ -198,10 +198,10 @@ public class AudioPlayer: NSObject {
     public var allowExternalPlayback = true
     
     /// Defines which audio session category to set. Default value is `AVAudioSessionCategoryPlayback`.
-    public var audioSessionCategory = AVAudioSessionCategoryPlayback
+    public var sessionCategory = AVAudioSessionCategoryPlayback
     
     /// Defines which audio session mode to set. Default value is `AVAudioSessionModeDefault`.
-    public var audioSessionMode = AVAudioSessionModeDefault
+    public var sessionMode = AVAudioSessionModeDefault
     
     /// Defines which time pitch algorithm to use. Default value is `AVAudioTimePitchAlgorithmLowQualityZeroLatency`.
     public var timePitchAlgorithm = AVAudioTimePitchAlgorithmLowQualityZeroLatency
@@ -420,8 +420,8 @@ public class AudioPlayer: NSObject {
             KDEDebug("AVAudioSession setActive(\(active))")
             do {
                 if (active) {
-                    try AVAudioSession.sharedInstance().setCategory(audioSessionCategory)
-                    try AVAudioSession.sharedInstance().setMode(audioSessionMode)
+                    try AVAudioSession.sharedInstance().setCategory(sessionCategory)
+                    try AVAudioSession.sharedInstance().setMode(sessionMode)
                 }
                 try AVAudioSession.sharedInstance().setActive(active)
             } catch {

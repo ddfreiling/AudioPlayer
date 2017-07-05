@@ -202,6 +202,9 @@ public class AudioPlayer: NSObject {
     
     /// Defines which audio session mode to set. Default value is `AVAudioSessionModeDefault`.
     public var audioSessionMode = AVAudioSessionModeDefault
+    
+    /// Defines which time pitch algorithm to use. Default value is `AVAudioTimePitchAlgorithmLowQualityZeroLatency`.
+    public var timePitchAlgorithm = AVAudioTimePitchAlgorithmLowQualityZeroLatency
 
     /// Defines whether the player should resume after a system interruption or not. Default value is `true`.
     public var resumeAfterInterruption = true

@@ -182,7 +182,15 @@ extension AudioPlayer {
         guard let event = event as? MPChangePlaybackPositionCommandEvent else {
             return
         }
-        self.seek(to: event.positionTime)
+        guard self.player?.currentItem?.status == .readyToPlay else {
+            self.seek(to: event.positionTime)
+            return
+        }
+        self.seek(to: event.positionTime, byAdaptingTimeToFitSeekableRanges: false,
+                  toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero) { [weak self] finished in
+            // TODO: This is implicitly updated when there is a completionHandler anyway..
+            self?.updateNowPlayingInfoCenter()
+        }
     }
     
     private func handleRemoteControlSeekEvent(_ event: MPRemoteCommandEvent, isForward: Bool) {

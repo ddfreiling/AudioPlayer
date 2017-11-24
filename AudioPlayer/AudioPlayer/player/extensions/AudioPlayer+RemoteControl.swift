@@ -9,10 +9,6 @@
 import Foundation
 import MediaPlayer
 
-// RemoteControls TODO:
-// - delegate callbacks for like/dislike/rate/bookmark commands
-// - test shuffle/repeat mode commands
-
 /// Enum for AudioPlayer remote commands. Saves clients from having to provide MPRemoteCommand references.
 /// Some commands may not occupy one of the command slots or can collapse with others into the menu button.
 /// Unless stated otherwise these commands can be assumed to be available from iOS 7.1, tvOS 9 and OSX 10.12.1
@@ -30,15 +26,14 @@ import MediaPlayer
     /// Available from iOS 9.1 and tvOS 9.1
     case changePlaybackPosition = 9
     
-    //TODO: delegate callbacks for these commands
+    // These commands must be handled by the delegate.
     case rate = 10
     case like = 11
     case dislike = 12
     case bookmark = 13
     
-    /// Available from iOS 10 tvOS 10
-    case changeRepeatMode = 14
     /// Available from iOS 10 and tvOS 10
+    case changeRepeatMode = 14
     case changeShuffleMode = 15
     
     func getMPRemoteCommands() -> [MPRemoteCommand] {
@@ -133,7 +128,7 @@ extension AudioPlayer {
         let remote = MPRemoteCommandCenter.shared()
         
         // Assume success, must set to .failed inside case if necessary
-        var handlerStatus = MPRemoteCommandHandlerStatus.success
+        var commandStatus = MPRemoteCommandHandlerStatus.success
         
         if event.command == remote.stopCommand {
             self.stop()
@@ -170,9 +165,11 @@ extension AudioPlayer {
         } else if event.command == remote.changeShuffleModeCommand {
             handleChangeShuffleModeEvent(event)
         } else {
-            handlerStatus = .commandFailed
+            if delegate?.audioPlayer(self, didReceiveRemoteControlEvent: event) == false {
+                commandStatus = .commandFailed
+            }
         }
-        return handlerStatus
+        return commandStatus
     }
     
     private var remoteCommandsToRegister: [MPRemoteCommand] {

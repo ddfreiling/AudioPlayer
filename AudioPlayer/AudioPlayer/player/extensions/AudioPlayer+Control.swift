@@ -189,10 +189,10 @@ extension AudioPlayer {
             completionHandler(false)
             return
         }
-        player?.seek(to: CMTime(timeInterval: time), toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter,
-                     completionHandler: { [weak self] finished in
-                        completionHandler(finished)
-                        self?.updateNowPlayingInfoCenter()
-        })
+        player?.seek(to: CMTime(timeInterval: time), toleranceBefore: toleranceBefore,
+                     toleranceAfter: toleranceAfter) { [weak self] finished in
+            completionHandler(finished)
+            self?.updateNowPlayingInfoCenter()
+        }
     }
 }

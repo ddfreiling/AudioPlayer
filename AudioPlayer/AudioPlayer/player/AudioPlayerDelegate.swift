@@ -7,6 +7,7 @@
 //
 
 import AVFoundation
+import MediaPlayer
 
 /// This typealias only serves the purpose of saving user to `import AVFoundation`.
 public typealias Metadata = [AVMetadataItem]
@@ -79,4 +80,10 @@ public extension AudioPlayerDelegate {
     func audioPlayer(_ audioPlayer: AudioPlayer, didUpdateEmptyMetadataOn item: AudioItem, withData data: Metadata) {}
 
     func audioPlayer(_ audioPlayer: AudioPlayer, didLoad range: TimeRange, for item: AudioItem) {}
+
+    /// This method gets called when a remote command is received, and was not handled automatically by AudioPlayer.
+    /// Commands which are not handled automatically are: rate, like, dislike, bookmark.
+    func audioPlayer(_ audioPlayer: AudioPlayer, didReceiveRemoteControlEvent event: MPRemoteCommandEvent) -> Bool {
+        return false
+    }
 }

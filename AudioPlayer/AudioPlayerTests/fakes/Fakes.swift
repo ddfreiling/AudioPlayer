@@ -22,7 +22,7 @@ class FakeEventListener: EventListener {
 class FakeReachability: Reachability {
     var reachabilityStatus = Reachability.NetworkStatus.notReachable {
         didSet {
-            NotificationCenter.default.post(name: .ReachabilityChanged, object: self)
+            NotificationCenter.default.post(name: ReachabilityChangedNotification, object: self)
         }
     }
 
@@ -194,7 +194,7 @@ class FakeAudioPlayerDelegate: AudioPlayerDelegate {
 
     var didFindDuration: ((AudioPlayer, TimeInterval, AudioItem) -> Void)?
 
-    var didUpdateEmptyMetadata: ((AudioPlayer, AudioItem, Metadata) -> Void)?
+    var didUpdateEmptyMetadata: ((AudioPlayer, AudioItem, [AVMetadataItem]) -> Void)?
 
 
     func audioPlayer(_ audioPlayer: AudioPlayer, didChangeStateFrom from: AudioPlayerState, to state: AudioPlayerState) {
@@ -217,7 +217,7 @@ class FakeAudioPlayerDelegate: AudioPlayerDelegate {
         didFindDuration?(audioPlayer, duration, item)
     }
 
-    func audioPlayer(_ audioPlayer: AudioPlayer, didUpdateEmptyMetadataOn item: AudioItem, withData data: Metadata) {
+    func audioPlayer(_ audioPlayer: AudioPlayer, didUpdateEmptyMetadataOn item: AudioItem, withData data: [AVMetadataItem]) {
         didUpdateEmptyMetadata?(audioPlayer, item, data)
     }
 }

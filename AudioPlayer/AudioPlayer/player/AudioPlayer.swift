@@ -50,12 +50,15 @@ public class AudioPlayer: NSObject {
 
     /// The queue containing items to play.
     var queue: AudioItemQueue?
+    
+    /// Cached AVAssets, mainly used for preloading next item.
+    var cachedAssets: [URL: AVURLAsset] = [:]
 
     /// The audio player.
     var player: AVPlayer? {
         didSet {
             if #available(OSX 10.11, *) {
-                player?.allowsExternalPlayback = false
+                player?.allowsExternalPlayback = allowExternalPlayback
             }
             player?.volume = volume
             player?.rate = rate
@@ -65,14 +68,16 @@ public class AudioPlayer: NSObject {
                 playerEventProducer.player = player
                 audioItemEventProducer.item = currentItem
                 playerEventProducer.startProducingEvents()
-                networkEventProducer.startProducingEvents()
                 audioItemEventProducer.startProducingEvents()
                 qualityAdjustmentEventProducer.startProducingEvents()
+                
+                // Start producing network events, if not already doing so
+                networkEventProducer.startProducingEvents()
+                registerRemoteControlCommands()
             } else {
                 playerEventProducer.player = nil
                 audioItemEventProducer.item = nil
                 playerEventProducer.stopProducingEvents()
-                networkEventProducer.stopProducingEvents()
                 audioItemEventProducer.stopProducingEvents()
                 qualityAdjustmentEventProducer.stopProducingEvents()
             }
@@ -87,18 +92,22 @@ public class AudioPlayer: NSObject {
                 player?.rate = 0
                 player = nil
 
-                //Ensures the audio session got started
+                //Ensures the audio session is active
                 setAudioSession(active: true)
+                
+                //Reset special state flags
+                pausedForInterruption = false
+                stateBeforeBuffering = nil
+                stateWhenConnectionLost = nil
+                queuedSeek = nil
 
                 //Sets new state
                 let info = currentItem.url(for: currentQuality)
-                if reachability.isReachable() || info.url.ap_isOfflineURL {
+                if isOnline || info.url.ap_isOfflineURL {
                     state = .buffering
-                    backgroundHandler.beginBackgroundTask()
                 } else {
                     stateWhenConnectionLost = .buffering
                     state = .waitingForConnection
-                    backgroundHandler.beginBackgroundTask()
                     return
                 }
                 
@@ -106,11 +115,7 @@ public class AudioPlayer: NSObject {
                 pausedForInterruption = false
                 
                 //Create new AVPlayerItem
-                let playerItem = AVPlayerItem(url: info.url)
-                
-                if #available(iOS 10.0, tvOS 10.0, OSX 10.12, *) {
-                    playerItem.preferredForwardBufferDuration = self.preferredForwardBufferDuration
-                }
+                let playerItem = getAVPlayerItem(forUrl: info.url)
 
                 //Creates new player
                 player = AVPlayer(playerItem: playerItem)
@@ -122,14 +127,17 @@ public class AudioPlayer: NSObject {
 
                 //Calls delegate
                 if oldValue != currentItem {
-                    delegate?.audioPlayer(self, willStartPlaying: currentItem)
+                    delegate?.audioPlayer?(self, willStartPlaying: currentItem)
                 }
                 player?.rate = rate
-            } else {
+            } else if (player != nil) {
                 stop()
             }
         }
     }
+  
+    /// The latest error on failed state
+    var failedError: AudioPlayerError?
 
     // MARK: Public properties
 
@@ -188,6 +196,18 @@ public class AudioPlayer: NSObject {
             retryEventProducer.retryTimeout = newValue
         }
     }
+    
+    /// Defines whether external playback to AirPlay devices is enabled. Default value is `true`
+    public var allowExternalPlayback = true
+    
+    /// Defines which audio session category to set. Default value is `AVAudioSessionCategoryPlayback`.
+    public var sessionCategory = AVAudioSessionCategoryPlayback
+    
+    /// Defines which audio session mode to set. Default value is `AVAudioSessionModeDefault`.
+    public var sessionMode = AVAudioSessionModeDefault
+    
+    /// Defines which time pitch algorithm to use. Default value is `AVAudioTimePitchAlgorithmLowQualityZeroLatency`.
+    public var timePitchAlgorithm = AVAudioTimePitchAlgorithmLowQualityZeroLatency
 
     /// Defines whether the player should resume after a system interruption or not. Default value is `true`.
     public var resumeAfterInterruption = true
@@ -233,6 +253,26 @@ public class AudioPlayer: NSObject {
     /// Defines the preferred size of the forward buffer for the underlying `AVPlayerItem`.
     /// Works on iOS/tvOS 10+, default is 0, which lets `AVPlayer` decide.
     public var preferredForwardBufferDuration = TimeInterval(0)
+    
+    @objc(remoteCommandsEnabled)
+    public var objc_remoteCommandsEnabled: [Int] = [AudioPlayerRemoteCommand.changePlaybackPosition.rawValue,
+                                                    AudioPlayerRemoteCommand.previousTrack.rawValue,
+                                                    AudioPlayerRemoteCommand.playPause.rawValue,
+                                                    AudioPlayerRemoteCommand.nextTrack.rawValue] {
+        didSet {
+            remoteCommandsEnabled = objc_remoteCommandsEnabled.map({ AudioPlayerRemoteCommand(rawValue: $0)! })
+        }
+    }
+    
+    /// Defines which remote control commands should be enabled. Max shown on iOS is 3 commands.
+    public var remoteCommandsEnabled: [AudioPlayerRemoteCommand] = [.changePlaybackPosition, .previousTrack, .playPause, .nextTrack] {
+        didSet {
+            if #available(OSX 10.12.1, *) {
+                unregisterRemoteControlCommands(oldValue)
+                registerRemoteControlCommands()
+            }
+        }
+    }
 
     /// Defines how to behave when the user is seeking through the lockscreen or the control center.
     ///
@@ -290,13 +330,13 @@ public class AudioPlayer: NSObject {
             updateNowPlayingInfoCenter()
 
             if state != oldValue {
-                if case .buffering = state {
-                    backgroundHandler.beginBackgroundTask()
-                } else if case .buffering = oldValue {
+                if [.buffering, .waitingForConnection].contains(oldValue) {
                     backgroundHandler.endBackgroundTask()
                 }
-
-                delegate?.audioPlayer(self, didChangeStateFrom: oldValue, to: state)
+                if [.buffering, .waitingForConnection].contains(state) {
+                    backgroundHandler.beginBackgroundTask()
+                }
+                delegate?.audioPlayer?(self, didChangeStateFrom: oldValue, to: state)
             }
         }
     }
@@ -305,6 +345,9 @@ public class AudioPlayer: NSObject {
     public internal(set) var currentQuality: AudioQuality
 
     // MARK: Private properties
+    
+    /// A SeekOperation which will be executed once currentItem is ready to play.
+    var queuedSeek: SeekOperation?
 
     /// A boolean value indicating whether the player has been paused because of a system interruption.
     var pausedForInterruption = false
@@ -318,6 +361,20 @@ public class AudioPlayer: NSObject {
 
     /// The state of the player when the connection was lost
     var stateWhenConnectionLost: AudioPlayerState?
+    
+    /// Convenience for checking whether currentItem being played is an offline resource.
+    var currentItemIsOffline: Bool {
+        get {
+            return currentItem?.soundURLs[currentQuality]?.ap_isOfflineURL ?? false
+        }
+    }
+    
+    /// Convenience for checking if platform is currently online
+    var isOnline: Bool {
+        get {
+            return reachability?.isReachable ?? false
+        }
+    }
 
     // MARK: Initialization
 
@@ -335,6 +392,7 @@ public class AudioPlayer: NSObject {
     /// Deinitializes the AudioPlayer. On deinit, the player will simply stop playing anything it was previously
     /// playing.
     deinit {
+        networkEventProducer.stopProducingEvents()
         stop()
     }
 
@@ -344,12 +402,14 @@ public class AudioPlayer: NSObject {
     func updateNowPlayingInfoCenter() {
         #if os(iOS) || os(tvOS)
             if let item = currentItem {
+                setRemoteControlCommandsEnabled(true)
                 MPNowPlayingInfoCenter.default().ap_update(
                     with: item,
                     duration: currentItemDuration,
                     progression: currentItemProgression,
                     playbackRate: player?.rate ?? 0)
             } else {
+                setRemoteControlCommandsEnabled(false)
                 MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
             }
         #endif
@@ -360,8 +420,16 @@ public class AudioPlayer: NSObject {
     /// - Parameter active: A boolean value indicating whether the audio session should be set to active or not.
     func setAudioSession(active: Bool) {
         #if os(iOS) || os(tvOS)
-            _ = try? AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
-            _ = try? AVAudioSession.sharedInstance().setActive(active)
+            KDEDebug("AVAudioSession setActive(\(active))")
+            do {
+                if (active) {
+                    try AVAudioSession.sharedInstance().setCategory(sessionCategory)
+                    try AVAudioSession.sharedInstance().setMode(sessionMode)
+                }
+                try AVAudioSession.sharedInstance().setActive(active)
+            } catch {
+                KDEDebug("AVAudioSession setActive(\(active)) Error: \(error.localizedDescription)")
+            }
         #endif
     }
 

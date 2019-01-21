@@ -16,13 +16,20 @@ extension AudioPlayer {
     public func resume() {
         //Ensure pause flag is no longer set
         pausedForInterruption = false
+
+        //Pause initiates a background task, end it on resume
+        backgroundHandler.endBackgroundTask()
+        
+        //Ensures the audio session is active
+        setAudioSession(active: true)
         
         player?.rate = rate
 
         //We don't wan't to change the state to Playing in case it's Buffering. That
         //would be a lie.
+        //If streaming go to buffering state, allowing non-default buffering strategies to work
         if !state.isPlaying && !state.isBuffering {
-            state = .playing
+            state = currentItemIsOffline ? .playing : .buffering
         }
 
         retryEventProducer.startProducingEvents()
@@ -45,11 +52,14 @@ extension AudioPlayer {
     /// Starts playing the current item immediately. Works on iOS/tvOS 10+ and macOS 10.12+
     func playImmediately() {
         if #available(iOS 10.0, tvOS 10.0, OSX 10.12, *) {
+            //NOTE: No need to do anything if we're already playing
+            guard let player = player, player.timeControlStatus != .playing else {
+                return
+            }
             self.state = .playing
-            player?.playImmediately(atRate: rate)
+            player.playImmediately(atRate: rate)
             
             retryEventProducer.stopProducingEvents()
-            backgroundHandler.endBackgroundTask()
         }
     }
 
@@ -84,17 +94,19 @@ extension AudioPlayer {
 
         if let _ = player {
             player?.rate = 0
+            player?.replaceCurrentItem(with: nil)
             player = nil
         }
+        
         if let _ = currentItem {
             currentItem = nil
         }
         if let _ = queue {
             queue = nil
         }
-
-        setAudioSession(active: false)
+        
         state = .stopped
+        setAudioSession(active: false)
     }
 
     /// Seeks to a specific time.
@@ -112,6 +124,7 @@ extension AudioPlayer {
                      toleranceBefore: CMTime = kCMTimePositiveInfinity,
                      toleranceAfter: CMTime = kCMTimePositiveInfinity,
                      completionHandler: ((Bool) -> Void)? = nil) {
+        KDEDebug("seek to \(time)")
         guard let earliest = currentItemSeekableRange?.earliest,
             let latest = currentItemSeekableRange?.latest else {
                 //In case we don't have a valid `seekableRange`, although this *shouldn't* happen
@@ -161,43 +174,16 @@ extension AudioPlayer {
         let position = max(range.earliest, range.latest - padding)
         seekSafely(to: position, completionHandler: completionHandler)
     }
-
-    #if os(iOS) || os(tvOS)
-    //swiftlint:disable cyclomatic_complexity
-    /// Handle events received from Control Center/Lock screen/Other in UIApplicationDelegate.
-    ///
-    /// - Parameter event: The event received.
-    public func remoteControlReceived(with event: UIEvent) {
-        guard event.type == .remoteControl else {
-            return
+    
+    public func seekToRelativeTime(_ relativeTime: TimeInterval, completionHandler: ((Bool) -> Void)? = nil) {
+        guard let currentTime = player?.currentTime(),
+            currentTime.seconds.isFinite else {
+                completionHandler?(false)
+                return
         }
-
-        switch event.subtype {
-        case .remoteControlBeginSeekingBackward:
-            seekingBehavior.handleSeekingStart(player: self, forward: false)
-        case .remoteControlBeginSeekingForward:
-            seekingBehavior.handleSeekingStart(player: self, forward: true)
-        case .remoteControlEndSeekingBackward:
-            seekingBehavior.handleSeekingEnd(player: self, forward: false)
-        case .remoteControlEndSeekingForward:
-            seekingBehavior.handleSeekingEnd(player: self, forward: true)
-        case .remoteControlNextTrack:
-            next()
-        case .remoteControlPause,
-             .remoteControlTogglePlayPause where state.isPlaying:
-            pause()
-        case .remoteControlPlay,
-             .remoteControlTogglePlayPause where state.isPaused:
-            resume()
-        case .remoteControlPreviousTrack:
-            previous()
-        case .remoteControlStop:
-            stop()
-        default:
-            break
-        }
+        let seekToAbsoluteTime = max(currentTime.seconds + relativeTime, 0)
+        seek(to: seekToAbsoluteTime, byAdaptingTimeToFitSeekableRanges: false, toleranceBefore: kCMTimePositiveInfinity, toleranceAfter: kCMTimePositiveInfinity, completionHandler: completionHandler)
     }
-    #endif
 }
 
 extension AudioPlayer {
@@ -212,14 +198,22 @@ extension AudioPlayer {
             updateNowPlayingInfoCenter()
             return
         }
-        guard player?.currentItem?.status == .readyToPlay else {
+        if (player?.currentItem?.status == .readyToPlay) {
+            player?.seek(to: CMTime(timeInterval: time), toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
+                completionHandler(finished)
+                self?.updateNowPlayingInfoCenter()
+            }
+        } else if (player?.currentItem?.status == .unknown) {
+            KDEDebug("seekSafely: currentItem not loaded yet, queue the seek for when it's ready")
+            // status is unknown, queue the seek for when status changes to ready
+            queuedSeek = SeekOperation(time: time,
+                                       toleranceBefore: toleranceBefore,
+                                       toleranceAfter: toleranceAfter,
+                                       completionHandler: completionHandler)
+        } else {
+            KDEDebug("seekSafely: currentItem is failed, cannot seek")
+            // seek is not possible
             completionHandler(false)
-            return
         }
-        player?.seek(to: CMTime(timeInterval: time), toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter,
-                     completionHandler: { [weak self] finished in
-                        completionHandler(finished)
-                        self?.updateNowPlayingInfoCenter()
-        })
     }
 }

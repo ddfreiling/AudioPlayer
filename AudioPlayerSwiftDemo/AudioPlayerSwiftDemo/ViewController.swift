@@ -49,8 +49,8 @@ class ViewController: UIViewController, AudioPlayerDelegate {
     @IBAction func doPlay(_ sender: Any) {
         print(#function)
         
-        let fileUrl: URL = Bundle.main.url(forResource: "13_kapitel_9", withExtension: "mp3")!
-        let fileUrl2: URL = Bundle.main.url(forResource: "1984-01-org", withExtension: "mp3")!
+//        let fileUrl: URL = Bundle.main.url(forResource: "13_kapitel_9", withExtension: "mp3")!
+//        let fileUrl2: URL = Bundle.main.url(forResource: "1984-01-org", withExtension: "mp3")!
         
         var items = [AudioItem]()
 //        items.append(getAudioItemForURL("https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/03_kolofon_og_bibliogra.mp3", withTitle: "idx 2", withArtist: "Michael Kamp")!)
@@ -76,9 +76,9 @@ class ViewController: UIViewController, AudioPlayerDelegate {
         items.append(getAudioItemForURL("https://archive.org/download/George-Orwell-1984-Audio-book/1984-02.mp3", withTitle: "Kapitel 2", withAlbum: "1986", withArtist: "George Orwell")!)
         items.append(getAudioItemForURL("https://archive.org/download/George-Orwell-1984-Audio-book/1984-03.mp3", withTitle: "Kapitel 3", withAlbum: "1986", withArtist: "George Orwell" )!)
         
-        player.play(items: items, startAtIndex: 2)
+        player.play(items: items, startAtIndex: 1)
 //        player.play(items: items)
-        player.seek(to: TimeInterval(5000)) { completed in
+        player.seek(to: TimeInterval(5)) { completed in
             print("Seek completed? \(completed)")
         }
     }
@@ -113,7 +113,7 @@ class ViewController: UIViewController, AudioPlayerDelegate {
     @IBAction func doChangeSkipInterval(_ sender: Any) {
         // Skip to almost end
         if let duration = player.currentItemDuration {
-            player.seek(to: duration - 10, byAdaptingTimeToFitSeekableRanges: false, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero) { success in
+            player.seek(to: duration - 10, byAdaptingTimeToFitSeekableRanges: false, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero) { success in
                 print("seek result: \(success)")
             }
         }
@@ -129,6 +129,9 @@ class ViewController: UIViewController, AudioPlayerDelegate {
     
     func audioPlayer(_ audioPlayer: AudioPlayer, didChangeStateFrom from: AudioPlayerState, to state: AudioPlayerState) {
         print("AudioPlayer state \(from) -> \(state)")
+        if (state == AudioPlayerState.failed) {
+            print("failed state: %@", player.failedError)
+        }
     }
     
     func audioPlayer(_ audioPlayer: AudioPlayer, willStartPlaying item: AudioItem) {

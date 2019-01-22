@@ -8,6 +8,8 @@
 
 #import "ViewController.h"
 
+#import <CoreMedia/CoreMedia.h>
+#import <AVFoundation/AVFoundation.h>
 #import <AudioPlayer/AudioPlayer-swift.h>
 
 @interface ViewController () <AudioPlayerDelegate>
@@ -52,19 +54,25 @@
     self.player.delegate = self;
     
     self.items = [[NSArray alloc] initWithObjects:
-                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/01_michael_kamp_bunker_.mp3" withTitle:@"Intro" andArtist:@"Michael Kamp"],
-                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/02_om_denne_udgave.mp3" withTitle:@"Om denne udgave" andArtist:@"Michael Kamp"],
-                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/03_kolofon_og_bibliogra.mp3" withTitle:@"Kolofon og bib" andArtist:@"Michael Kamp"],
-                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/04_citat.mp3" withTitle:@"Citat" andArtist:@"Michael Kamp"],
-                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/05_kapitel_1.mp3" withTitle:@"Kapitel 1" andArtist:@"Michael Kamp"],
-                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/06_kapitel_2.mp3" withTitle:@"Kapitel 2" andArtist:@"Michael Kamp"],
+//                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/01_michael_kamp_bunker_.mp3" withTitle:@"Intro" andArtist:@"Michael Kamp"],
+//                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/02_om_denne_udgave.mp3" withTitle:@"Om denne udgave" andArtist:@"Michael Kamp"],
+//                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/03_kolofon_og_bibliogra.mp3" withTitle:@"Kolofon og bib" andArtist:@"Michael Kamp"],
+//                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/04_citat.mp3" withTitle:@"Citat" andArtist:@"Michael Kamp"],
+//                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/05_kapitel_1.mp3" withTitle:@"Kapitel 1" andArtist:@"Michael Kamp"],
+//                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/06_kapitel_2.mp3" withTitle:@"Kapitel 2" andArtist:@"Michael Kamp"],
+//                  nil];
+                  [self audioItemFromURLString:@"https://archive.org/download/George-Orwell-1984-Audio-book/1984-01.mp3" withTitle:@"1984 - 1" andArtist:@"George Orwell"],
+                  [self audioItemFromURLString:@"https://archive.org/download/George-Orwell-1984-Audio-book/1984-02.mp3" withTitle:@"1984 - 2" andArtist:@"George Orwell"],
+                  [self audioItemFromURLString:@"https://archive.org/download/George-Orwell-1984-Audio-book/1984-03.mp3" withTitle:@"1984 - 3" andArtist:@"George Orwell"],
                   nil];
+                  
     [self.player playWithItems:self.items startAtIndex:0];
     
     // Buffering strategy
     self.player.bufferingStrategy = AudioPlayerBufferingStrategyPlayWhenPreferredBufferDurationFull;
     self.player.preferredBufferDurationBeforePlayback = 30.0;
     self.player.preferredForwardBufferDuration = 300.0;
+    self.player.timePitchAlgorithm = AVAudioTimePitchAlgorithmTimeDomain;
     
     self.player.remoteCommandsEnabled = [NSArray arrayWithObjects:
                                          [NSNumber numberWithInt:AudioPlayerRemoteCommandChangePlaybackPosition],
@@ -99,29 +107,40 @@
 }
 
 - (IBAction)seekSpecific:(id)sender {
-    [self.player playWithItems:self.items startAtIndex:2];
+    [self.player playWithItems:self.items startAtIndex:1];
+    
+    [self.player seekTo:5 byAdaptingTimeToFitSeekableRanges:false toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler: ^(BOOL success){
+        NSLog(@"seek completed: %d", success);
+    }];
+}
+
+- (IBAction)stop:(id)sender {
+    [self.player stop];
+    
 }
 
 - (NSNumber *) getIndexForAudioItem:(AudioItem *)item {
     return [NSNumber numberWithUnsignedInteger:[self.items indexOfObject:item]];
 }
 
-- (void)audioPlayer:(AudioPlayer * _Nonnull)audioPlayer didChangeStateFrom:(enum AudioPlayerState)from to:(enum AudioPlayerState)state {
+- (void)audioPlayer:(AudioPlayer *)audioPlayer didChangeStateFrom:(enum AudioPlayerState)from to:(enum AudioPlayerState)state {
     NSLog(@"changed from state %d to %d", (int)from, (int)state);
+    if (state == AudioPlayerStateFailed) {
+        NSLog(@"failed with error: %@", self.player.failedError);
+    }
 }
-- (void)audioPlayer:(AudioPlayer * _Nonnull)audioPlayer willStartPlaying:(AudioItem * _Nonnull)item {
+- (void)audioPlayer:(AudioPlayer *)audioPlayer willStartPlaying:(AudioItem *)item {
     NSLog(@"will start playing: %@", [self getIndexForAudioItem:item]);
 }
-- (void)audioPlayer:(AudioPlayer * _Nonnull)audioPlayer didUpdateProgressionTo:(NSTimeInterval)time percentageRead:(float)percentageRead {
-    NSLog(@"updated progression to: time %f, percent %f", (float)time, percentageRead);
+- (void)audioPlayer:(AudioPlayer *)audioPlayer didUpdateProgressionTo:(NSTimeInterval)time percentageRead:(float)percentageRead {
+    NSLog(@"updated progression to: time %.1f, percent %.1f", (float)time, percentageRead);
 }
-- (void)audioPlayer:(AudioPlayer * _Nonnull)audioPlayer didFindDuration:(NSTimeInterval)duration for:(AudioItem * _Nonnull)item {
+- (void)audioPlayer:(AudioPlayer *)audioPlayer didFindDuration:(NSTimeInterval)duration for:(AudioItem *)item {
     NSLog(@"found duration for %@: %f", [self getIndexForAudioItem:item], (float)duration);
 }
-- (void)audioPlayer:(AudioPlayer * _Nonnull)audioPlayer didLoad:(TimeRange * _Nonnull)range for:(AudioItem * _Nonnull)item {
-    float loaded = (float)range.latest - (float)range.earliest;
-    NSLog(@"did load %@: %f", [self getIndexForAudioItem:item], loaded);
+- (void)audioPlayer:(AudioPlayer *)audioPlayer didLoadEarliest:(NSTimeInterval)earliest latest:(NSTimeInterval)latest for:(AudioItem *)item {
+    float loaded = (float)latest - (float)earliest;
+    NSLog(@"did load %@ - %f", [self getIndexForAudioItem:item], loaded);
 }
-
 
 @end

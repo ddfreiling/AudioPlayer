@@ -90,6 +90,9 @@ extension AudioPlayer {
 
     /// Stops the player and clear the queue.
     public func stop() {
+        if (state == .stopped) {
+            return
+        }
         retryEventProducer.stopProducingEvents()
 
         if let _ = player {
@@ -106,7 +109,13 @@ extension AudioPlayer {
         }
         
         state = .stopped
-        setAudioSession(active: false)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: { [unowned self] in
+            guard self.state == .stopped else {
+                return
+            }
+            self.setAudioSession(active: false)
+        })
     }
 
     /// Seeks to a specific time.

@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.requires_arc  = true
 
   s.ios.deployment_target = '8.0'
-  s.ios.framework = 'UIKit', 'AVFoundation', 'MediaPlayer', 'SystemConfiguration'
+  s.ios.framework = 'UIKit', 'AVFoundation', 'MediaPlayer', 'SystemConfiguration', 'CoreTelephony'
 
   s.tvos.deployment_target = '9.0'
   s.tvos.framework = 'UIKit', 'AVFoundation', 'MediaPlayer', 'SystemConfiguration'

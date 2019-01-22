@@ -201,7 +201,7 @@ class PlayerEventProducer_Tests: XCTestCase {
     func testEventListenerGetsCalledWhenItemBufferIsReadyToPlay() {
         let e = expectation(description: "Waiting for `onEvent` to get called")
         listener.eventClosure = { event, producer in
-            if case PlayerEventProducer.PlayerEvent.readyToPlay = event {
+            if case PlayerEventProducer.PlayerEvent.playbackLikelyToKeepUp = event {
                 e.fulfill()
             }
         }
@@ -217,7 +217,7 @@ class PlayerEventProducer_Tests: XCTestCase {
 
     func testEventListenerDoesNotGetCalledWhenItemStatusChangesToAnyOtherThanError() {
         listener.eventClosure = { event, producer in
-            guard case PlayerEventProducer.PlayerEvent.progressed = event else {
+            guard case PlayerEventProducer.PlayerEvent.readyToPlay = event else {
                 XCTFail()
                 return
             }

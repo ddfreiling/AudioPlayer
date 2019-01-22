@@ -7,13 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BB33485E1EF7CAB5006716A8 /* 1984-01-org.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BB33485C1EF7CAB5006716A8 /* 1984-01-org.mp3 */; };
-		BB33485F1EF7CAB5006716A8 /* 1984-01.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BB33485D1EF7CAB5006716A8 /* 1984-01.mp3 */; };
-		BB3348611EF7CD19006716A8 /* 13_kapitel_9.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BB3348601EF7CD19006716A8 /* 13_kapitel_9.mp3 */; };
-		BB3348631EF7CE86006716A8 /* 13_kapitel_9_wm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BB3348621EF7CE86006716A8 /* 13_kapitel_9_wm.mp3 */; };
-		BB3348651EF7D18A006716A8 /* 13_kapitel_9_mp3val.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BB3348641EF7D18A006716A8 /* 13_kapitel_9_mp3val.mp3 */; };
-		BB3348671EF7DDD0006716A8 /* 13_kapitel_9_wm_mp3val.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BB3348661EF7DDD0006716A8 /* 13_kapitel_9_wm_mp3val.mp3 */; };
-		BB9257D41EF03B3900864EF6 /* 1984-02.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BB9257D21EF03B3900864EF6 /* 1984-02.mp3 */; };
 		BBEC499A1EC8C29200BAB484 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBEC49991EC8C29200BAB484 /* AppDelegate.swift */; };
 		BBEC499C1EC8C29200BAB484 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBEC499B1EC8C29200BAB484 /* ViewController.swift */; };
 		BBEC499F1EC8C29200BAB484 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BBEC499D1EC8C29200BAB484 /* Main.storyboard */; };
@@ -39,13 +32,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		BB33485C1EF7CAB5006716A8 /* 1984-01-org.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "1984-01-org.mp3"; sourceTree = "<group>"; };
-		BB33485D1EF7CAB5006716A8 /* 1984-01.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "1984-01.mp3"; sourceTree = "<group>"; };
-		BB3348601EF7CD19006716A8 /* 13_kapitel_9.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 13_kapitel_9.mp3; sourceTree = "<group>"; };
-		BB3348621EF7CE86006716A8 /* 13_kapitel_9_wm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 13_kapitel_9_wm.mp3; sourceTree = "<group>"; };
-		BB3348641EF7D18A006716A8 /* 13_kapitel_9_mp3val.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 13_kapitel_9_mp3val.mp3; sourceTree = "<group>"; };
-		BB3348661EF7DDD0006716A8 /* 13_kapitel_9_wm_mp3val.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = 13_kapitel_9_wm_mp3val.mp3; sourceTree = "<group>"; };
-		BB9257D21EF03B3900864EF6 /* 1984-02.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "1984-02.mp3"; sourceTree = "<group>"; };
 		BBEC49961EC8C29200BAB484 /* AudioPlayerSwiftDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioPlayerSwiftDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBEC49991EC8C29200BAB484 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BBEC499B1EC8C29200BAB484 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -91,13 +77,6 @@
 		BBEC49981EC8C29200BAB484 /* AudioPlayerSwiftDemo */ = {
 			isa = PBXGroup;
 			children = (
-				BB3348661EF7DDD0006716A8 /* 13_kapitel_9_wm_mp3val.mp3 */,
-				BB3348641EF7D18A006716A8 /* 13_kapitel_9_mp3val.mp3 */,
-				BB3348621EF7CE86006716A8 /* 13_kapitel_9_wm.mp3 */,
-				BB3348601EF7CD19006716A8 /* 13_kapitel_9.mp3 */,
-				BB33485C1EF7CAB5006716A8 /* 1984-01-org.mp3 */,
-				BB33485D1EF7CAB5006716A8 /* 1984-01.mp3 */,
-				BB9257D21EF03B3900864EF6 /* 1984-02.mp3 */,
 				BBEC49991EC8C29200BAB484 /* AppDelegate.swift */,
 				BBEC499B1EC8C29200BAB484 /* ViewController.swift */,
 				BBEC499D1EC8C29200BAB484 /* Main.storyboard */,
@@ -144,7 +123,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = Nota;
 				TargetAttributes = {
 					BBEC49951EC8C29200BAB484 = {
@@ -182,16 +161,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB3348651EF7D18A006716A8 /* 13_kapitel_9_mp3val.mp3 in Resources */,
-				BB33485E1EF7CAB5006716A8 /* 1984-01-org.mp3 in Resources */,
-				BB3348631EF7CE86006716A8 /* 13_kapitel_9_wm.mp3 in Resources */,
 				BBEC49A41EC8C29200BAB484 /* LaunchScreen.storyboard in Resources */,
-				BB9257D41EF03B3900864EF6 /* 1984-02.mp3 in Resources */,
-				BB33485F1EF7CAB5006716A8 /* 1984-01.mp3 in Resources */,
 				BBEC49A11EC8C29200BAB484 /* Assets.xcassets in Resources */,
 				BBEC499F1EC8C29200BAB484 /* Main.storyboard in Resources */,
-				BB3348671EF7DDD0006716A8 /* 13_kapitel_9_wm_mp3val.mp3 in Resources */,
-				BB3348611EF7CD19006716A8 /* 13_kapitel_9.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,15 +212,23 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -291,15 +271,23 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -331,7 +319,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 5H73UZQ5V6;
 				INFOPLIST_FILE = AudioPlayerSwiftDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = dk.nota.AudioPlayerSwiftDemo;
@@ -347,7 +335,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 5H73UZQ5V6;
 				INFOPLIST_FILE = AudioPlayerSwiftDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = dk.nota.AudioPlayerSwiftDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";

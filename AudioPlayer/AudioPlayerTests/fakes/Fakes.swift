@@ -73,7 +73,7 @@ class FakeItem: AVPlayerItem {
         return timeRanges
     }
 
-    var stat = AVPlayerItemStatus.unknown {
+    var stat = AVPlayerItem.Status.unknown {
         willSet {
             willChangeValue(forKey: "status")
         }
@@ -82,7 +82,7 @@ class FakeItem: AVPlayerItem {
         }
     }
 
-    override var status: AVPlayerItemStatus {
+    override var status: AVPlayerItem.Status {
         return stat
     }
 
@@ -142,15 +142,15 @@ class FakePlayer: AVPlayer {
 }
 
 class FakeMetadataItem: AVMetadataItem {
-    var _commonKey: String
+    var _commonKey: AVMetadataKey
     var _value: NSCopying & NSObjectProtocol
 
-    init(commonKey: String, value: NSCopying & NSObjectProtocol) {
+    init(commonKey: AVMetadataKey, value: NSCopying & NSObjectProtocol) {
         _commonKey = commonKey
         _value = value
     }
 
-    override var commonKey: String? {
+    override var commonKey: AVMetadataKey? {
         return _commonKey
     }
 
@@ -164,7 +164,7 @@ class FakeApplication: BackgroundTaskCreator {
     var onEnd: ((UIBackgroundTaskIdentifier) -> Void)?
 
     func beginBackgroundTask(expirationHandler handler: (() -> Void)?) -> UIBackgroundTaskIdentifier {
-        return onBegin?(handler) ?? UIBackgroundTaskInvalid
+        return onBegin?(handler) ?? UIBackgroundTaskIdentifier.invalid
     }
 
     func endBackgroundTask(_ identifier: UIBackgroundTaskIdentifier) {

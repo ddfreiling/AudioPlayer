@@ -200,14 +200,14 @@ public class AudioPlayer: NSObject {
     /// Defines whether external playback to AirPlay devices is enabled. Default value is `true`
     public var allowExternalPlayback = true
     
-    /// Defines which audio session category to set. Default value is `AVAudioSessionCategoryPlayback`.
-    public var sessionCategory = AVAudioSessionCategoryPlayback
+    /// Defines which audio session category to set. Default value is `AVAudioSession.Category.playback`.
+    public var sessionCategory = AVAudioSession.Category.playback
     
-    /// Defines which audio session mode to set. Default value is `AVAudioSessionModeDefault`.
-    public var sessionMode = AVAudioSessionModeDefault
+    /// Defines which audio session mode to set. Default value is `AVAudioSession.Mode.default`.
+    public var sessionMode = AVAudioSession.Mode.default
     
-    /// Defines which time pitch algorithm to use. Default value is `AVAudioTimePitchAlgorithmLowQualityZeroLatency`.
-    public var timePitchAlgorithm = AVAudioTimePitchAlgorithmLowQualityZeroLatency
+    /// Defines which time pitch algorithm to use. Default value is `AVAudioTimePitchAlgorithm.lowQualityZeroLatency`.
+    public var timePitchAlgorithm = AVAudioTimePitchAlgorithm.lowQualityZeroLatency
 
     /// Defines whether the player should resume after a system interruption or not. Default value is `true`.
     public var resumeAfterInterruption = true
@@ -423,8 +423,12 @@ public class AudioPlayer: NSObject {
             KDEDebug("AVAudioSession setActive(\(active))")
             do {
                 if (active) {
-                    try AVAudioSession.sharedInstance().setCategory(sessionCategory)
-                    try AVAudioSession.sharedInstance().setMode(sessionMode)
+                    if #available(iOS 10.0, *) {
+                        try AVAudioSession.sharedInstance().setCategory(sessionCategory, mode: sessionMode, options: [])
+                    } else {
+                        AVAudioSession.sharedInstance().perform(NSSelectorFromString("setCategory:error:"), with: sessionCategory)
+                        try AVAudioSession.sharedInstance().setMode(sessionMode)
+                    }
                 }
                 try AVAudioSession.sharedInstance().setActive(active)
             } catch {

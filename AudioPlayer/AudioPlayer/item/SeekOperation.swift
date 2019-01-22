@@ -12,8 +12,8 @@ import CoreMedia
     
     init(time: TimeInterval,
          adaptToFitSeekableRanges: Bool = false,
-         toleranceBefore: CMTime = kCMTimePositiveInfinity,
-         toleranceAfter: CMTime = kCMTimePositiveInfinity,
+         toleranceBefore: CMTime = CMTime.positiveInfinity,
+         toleranceAfter: CMTime = CMTime.positiveInfinity,
          completionHandler: ((Bool) -> Void)? = nil) {
         self.time = time
         self.adaptToFitSeekableRanges = adaptToFitSeekableRanges

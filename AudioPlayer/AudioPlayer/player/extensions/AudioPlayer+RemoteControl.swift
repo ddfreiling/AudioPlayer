@@ -80,7 +80,7 @@ extension AudioPlayer {
         }
     }
     
-    func handleRemoteControlCommandEvent(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
+    @objc func handleRemoteControlCommandEvent(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         guard (player?.currentItem) != nil else {
             if #available(iOS 9.1, tvOS 9.1, OSX 10.12.2, *) {
                 return .noActionableNowPlayingItem

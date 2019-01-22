@@ -121,8 +121,8 @@ extension AudioPlayer {
     ///         if the operation has finished.
     public func seek(to time: TimeInterval,
                      byAdaptingTimeToFitSeekableRanges: Bool = false,
-                     toleranceBefore: CMTime = kCMTimePositiveInfinity,
-                     toleranceAfter: CMTime = kCMTimePositiveInfinity,
+                     toleranceBefore: CMTime = CMTime.positiveInfinity,
+                     toleranceAfter: CMTime = CMTime.positiveInfinity,
                      completionHandler: ((Bool) -> Void)? = nil) {
         KDEDebug("seek to \(time)")
         guard let earliest = currentItemSeekableRange?.earliest,
@@ -182,15 +182,15 @@ extension AudioPlayer {
                 return
         }
         let seekToAbsoluteTime = max(currentTime.seconds + relativeTime, 0)
-        seek(to: seekToAbsoluteTime, byAdaptingTimeToFitSeekableRanges: false, toleranceBefore: kCMTimePositiveInfinity, toleranceAfter: kCMTimePositiveInfinity, completionHandler: completionHandler)
+        seek(to: seekToAbsoluteTime, byAdaptingTimeToFitSeekableRanges: false, toleranceBefore: CMTime.positiveInfinity, toleranceAfter: CMTime.positiveInfinity, completionHandler: completionHandler)
     }
 }
 
 extension AudioPlayer {
     
     fileprivate func seekSafely(to time: TimeInterval,
-              toleranceBefore: CMTime = kCMTimePositiveInfinity,
-              toleranceAfter: CMTime = kCMTimePositiveInfinity,
+              toleranceBefore: CMTime = CMTime.positiveInfinity,
+              toleranceAfter: CMTime = CMTime.positiveInfinity,
               completionHandler: ((Bool) -> Void)?) {
         guard let completionHandler = completionHandler else {
             player?.seek(to: CMTime(timeInterval: time), toleranceBefore: toleranceBefore,

@@ -42,7 +42,7 @@ import MediaPlayer
     case changeShuffleMode = 15
 }
 
-@available(OSX 10.12.1, *)
+@available(OSX 10.12.2, *)
 extension AudioPlayer {
     
     /// Get or set the preferred intervals for skip forward and backward remote control commands.

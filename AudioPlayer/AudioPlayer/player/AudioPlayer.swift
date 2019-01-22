@@ -372,7 +372,7 @@ public class AudioPlayer: NSObject {
     /// Convenience for checking if platform is currently online
     var isOnline: Bool {
         get {
-            return reachability?.isReachable ?? false
+            return reachability != nil && reachability!.connection != Reachability.Connection.none
         }
     }
 

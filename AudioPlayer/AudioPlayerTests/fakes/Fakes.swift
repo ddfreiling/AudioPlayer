@@ -20,15 +20,15 @@ class FakeEventListener: EventListener {
 }
 
 class FakeReachability: Reachability {
-    var reachabilityStatus = Reachability.NetworkStatus.notReachable {
+    var newConnection = Reachability.Connection.none {
         didSet {
-            NotificationCenter.default.post(name: ReachabilityChangedNotification, object: self)
+            NotificationCenter.default.post(name: Notification.Name.reachabilityChanged, object: self)
         }
     }
 
-    override var currentReachabilityStatus: Reachability.NetworkStatus {
+    override var connection: Reachability.Connection {
         get {
-            return reachabilityStatus
+            return newConnection
         }
     }
 }

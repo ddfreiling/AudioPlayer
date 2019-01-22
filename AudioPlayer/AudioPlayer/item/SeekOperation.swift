@@ -8,7 +8,7 @@
 
 import CoreMedia
 
-@objc public class SeekOperation: NSObject {
+@objcMembers public class SeekOperation: NSObject {
     
     init(time: TimeInterval,
          adaptToFitSeekableRanges: Bool = false,

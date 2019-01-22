@@ -38,7 +38,7 @@ extension AudioPlayer {
     ///
     /// - Parameters:
     ///   - items: The items to play.
-    ///   - startAtIndex: The index to start the player with.
+    ///   - index: The index to start the player with.
     public func play(items: [AudioItem], startAtIndex index: Int = 0) {
         guard !items.isEmpty, 0 <= index, index < items.count else {
             KDEDebug("invalid arguments for play(), items.count=\(items.count), index=\(index)")

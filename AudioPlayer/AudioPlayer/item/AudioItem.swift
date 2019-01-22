@@ -59,7 +59,7 @@ public enum AudioQuality: Int {
 /// An `AudioItem` instance contains every piece of information needed for an `AudioPlayer` to play.
 ///
 /// URLs can be remote or local.
-@objc open class AudioItem: NSObject {
+@objcMembers open class AudioItem: NSObject {
     /// Returns the available qualities.
     public let soundURLs: [AudioQuality: URL]
 
@@ -168,7 +168,7 @@ public enum AudioQuality: Int {
     @objc open dynamic var trackNumber: NSNumber?
 
     /// The artwork image of the item.
-    open var artworkImage: Image? {
+    @objc open var artworkImage: Image? {
         get {
             #if os(OSX)
                 return artwork
@@ -195,7 +195,7 @@ public enum AudioQuality: Int {
     ///
     /// This can change over time which is why the property is dynamic. It enables KVO on the property.
     #if os(OSX)
-    open dynamic var artwork: Image?
+    @objc open dynamic var artwork: Image?
     #else
     @objc open dynamic var artwork: MPMediaItemArtwork?
 

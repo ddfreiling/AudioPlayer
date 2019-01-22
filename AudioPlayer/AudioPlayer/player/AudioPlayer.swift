@@ -15,7 +15,7 @@ import AVFoundation
 /// handle the whole playing audio process.
 ///
 /// You can get events (such as state change or time observation) by registering a delegate.
-public class AudioPlayer: NSObject {
+@objcMembers public class AudioPlayer: NSObject {
     // MARK: Handlers
 
     /// The background handler.

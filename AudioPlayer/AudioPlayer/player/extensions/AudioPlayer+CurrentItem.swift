@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class TimeRange: NSObject {
+@objcMembers public class TimeRange: NSObject {
     public var earliest: TimeInterval
     public var latest: TimeInterval
   

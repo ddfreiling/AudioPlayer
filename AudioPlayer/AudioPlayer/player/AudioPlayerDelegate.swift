@@ -65,7 +65,8 @@ import AVFoundation
     ///
     /// - Parameters:
     ///   - audioPlayer: The audio player.
-    ///   - range: The time range that the audio player loaded.
+    ///   - earliest: The earliest point of the loaded time range.
+    ///   - latest: The latest point of the loaded time range.
     ///   - item: Current item.
     @objc optional func audioPlayer(_ audioPlayer: AudioPlayer, didLoadEarliest earliest: TimeInterval, latest: TimeInterval, for item: AudioItem)
 }

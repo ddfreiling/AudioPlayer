@@ -27,7 +27,7 @@ extension AudioPlayer {
                 // Some unrecoverable error occured while playing, set failed state and
                 // let the retry handler try again if it's enabled.
                 state = .failed
-                failedError = .foundationError(error)
+                failedError = error
                 
                 // We might have had a queuedSeek for this item when it failed
                 queuedSeek = nil

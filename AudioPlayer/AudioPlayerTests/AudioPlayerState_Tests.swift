@@ -12,8 +12,8 @@ import XCTest
 class AudioPlayerState_Tests: XCTestCase {
     let buffering = AudioPlayerState.buffering
     let failed = AudioPlayerState.failed
-    let errorMaximumRetryCountHit = AudioPlayerError.maximumRetryCountHit
-    let errorOther = AudioPlayerError.foundationError(NSError(domain: "", code: -1, userInfo: nil))
+    let errorMaximumRetryCountHit = MaximumRetryCountHitError()
+    let errorOther = NSError(domain: "", code: -1, userInfo: nil)
     let paused = AudioPlayerState.paused
     let playing = AudioPlayerState.playing
     let stopped = AudioPlayerState.stopped

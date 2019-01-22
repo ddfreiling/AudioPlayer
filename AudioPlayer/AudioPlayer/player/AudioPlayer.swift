@@ -137,7 +137,7 @@ import AVFoundation
     }
   
     /// The latest error on failed state
-    var failedError: AudioPlayerError?
+    public var failedError: Error?
 
     // MARK: Public properties
 

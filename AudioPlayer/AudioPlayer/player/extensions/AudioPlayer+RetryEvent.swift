@@ -21,7 +21,7 @@ extension AudioPlayer {
 
         case .retryFailed:
             state = .failed
-            failedError = .maximumRetryCountHit
+            failedError = MaximumRetryCountHitError()
             producer.stopProducingEvents()
         }
     }

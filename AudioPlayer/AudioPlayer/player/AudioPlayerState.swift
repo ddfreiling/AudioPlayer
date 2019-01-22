@@ -12,9 +12,7 @@ import Foundation
 ///
 /// - maximumRetryCountHit: The player hit the maximum retry count.
 /// - foundationError: The `AVPlayer` failed to play.
-public enum AudioPlayerError: Error {
-    case maximumRetryCountHit
-    case foundationError(Error)
+public class MaximumRetryCountHitError: Error {
 }
 
 /// `AudioPlayerState` defines 4 state an `AudioPlayer` instance can be in.

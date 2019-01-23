@@ -57,9 +57,7 @@ import AVFoundation
     /// The audio player.
     var player: AVPlayer? {
         didSet {
-            if #available(OSX 10.11, *) {
-                player?.allowsExternalPlayback = allowExternalPlayback
-            }
+            player?.allowsExternalPlayback = allowExternalPlayback
             player?.volume = volume
             player?.rate = rate
             updatePlayerForBufferingStrategy()
@@ -73,7 +71,9 @@ import AVFoundation
                 
                 // Start producing network events, if not already doing so
                 networkEventProducer.startProducingEvents()
-                registerRemoteControlCommands()
+                if #available(OSX 10.12.2, *) {
+                    registerRemoteControlCommands()
+                }
             } else {
                 playerEventProducer.player = nil
                 audioItemEventProducer.item = nil
@@ -199,13 +199,13 @@ import AVFoundation
     
     /// Defines whether external playback to AirPlay devices is enabled. Default value is `true`
     public var allowExternalPlayback = true
-    
+
     /// Defines which audio session category to set. Default value is `AVAudioSession.Category.playback`.
     public var sessionCategory = AVAudioSession.Category.playback
-    
+
     /// Defines which audio session mode to set. Default value is `AVAudioSession.Mode.default`.
     public var sessionMode = AVAudioSession.Mode.default
-    
+
     /// Defines which time pitch algorithm to use. Default value is `AVAudioTimePitchAlgorithm.lowQualityZeroLatency`.
     public var timePitchAlgorithm = AVAudioTimePitchAlgorithm.lowQualityZeroLatency
 
@@ -267,7 +267,7 @@ import AVFoundation
     /// Defines which remote control commands should be enabled. Max shown on iOS is 3 commands.
     public var remoteCommandsEnabled: [AudioPlayerRemoteCommand] = [.changePlaybackPosition, .previousTrack, .playPause, .nextTrack] {
         didSet {
-            if #available(OSX 10.12.1, *) {
+            if #available(OSX 10.12.2, *) {
                 unregisterRemoteControlCommands(oldValue)
                 registerRemoteControlCommands()
             }
@@ -423,7 +423,7 @@ import AVFoundation
             KDEDebug("AVAudioSession setActive(\(active))")
             do {
                 if (active) {
-                    if #available(iOS 10.0, *) {
+                    if #available(iOS 10.0, tvOS 10.0, *) {
                         try AVAudioSession.sharedInstance().setCategory(sessionCategory, mode: sessionMode, options: [])
                     } else {
                         AVAudioSession.sharedInstance().perform(NSSelectorFromString("setCategory:error:"), with: sessionCategory)

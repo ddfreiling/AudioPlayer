@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '9.0'
   s.tvos.framework = 'UIKit', 'AVFoundation', 'MediaPlayer', 'SystemConfiguration'
 
-  s.osx.deployment_target = '10.10'
+  s.osx.deployment_target = '10.11'
   s.osx.framework = 'Foundation', 'AVFoundation', 'SystemConfiguration'
   s.osx.exclude_files = 'AudioPlayer/AudioPlayer/utils/MPNowPlayingInfoCenter+AudioItem.swift'
 end

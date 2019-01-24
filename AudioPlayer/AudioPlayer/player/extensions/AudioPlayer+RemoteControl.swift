@@ -47,14 +47,24 @@ extension AudioPlayer {
     
     /// Get or set the preferred intervals for skip forward and backward remote control commands.
     /// Currently does not support a different interval for forward or backward.
-    public var remoteControlSkipIntervals: [TimeInterval] {
+    public var remoteControlSkipIntervals: [NSNumber] {
         get {
-            return MPRemoteCommandCenter.shared().skipForwardCommand.preferredIntervals as! [TimeInterval]
+            return MPRemoteCommandCenter.shared().skipForwardCommand.preferredIntervals
         }
         set {
             let remote = MPRemoteCommandCenter.shared()
-            remote.skipForwardCommand.preferredIntervals = newValue as [NSNumber]
-            remote.skipBackwardCommand.preferredIntervals = newValue as [NSNumber]
+            remote.skipForwardCommand.preferredIntervals = newValue
+            remote.skipBackwardCommand.preferredIntervals = newValue
+        }
+    }
+    
+    /// Get or set the supported playback rates for the changePlaybackRate command
+    public var remoteControlSupportedPlaybackRates: [NSNumber] {
+        get {
+            return MPRemoteCommandCenter.shared().changePlaybackRateCommand.supportedPlaybackRates
+        }
+        set {
+            MPRemoteCommandCenter.shared().changePlaybackRateCommand.supportedPlaybackRates = newValue
         }
     }
     

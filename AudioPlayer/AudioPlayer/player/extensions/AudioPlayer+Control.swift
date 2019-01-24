@@ -201,15 +201,10 @@ extension AudioPlayer {
               toleranceBefore: CMTime = CMTime.positiveInfinity,
               toleranceAfter: CMTime = CMTime.positiveInfinity,
               completionHandler: ((Bool) -> Void)?) {
-        guard let completionHandler = completionHandler else {
-            player?.seek(to: CMTime(timeInterval: time), toleranceBefore: toleranceBefore,
-                         toleranceAfter: toleranceAfter)
-            updateNowPlayingInfoCenter()
-            return
-        }
         if (player?.currentItem?.status == .readyToPlay) {
+            KDEDebug("seekSafely: seek to \(time)")
             player?.seek(to: CMTime(timeInterval: time), toleranceBefore: toleranceBefore, toleranceAfter: toleranceAfter) { [weak self] finished in
-                completionHandler(finished)
+                completionHandler?(finished)
                 self?.updateNowPlayingInfoCenter()
             }
         } else if (player?.currentItem?.status == .unknown) {
@@ -222,7 +217,7 @@ extension AudioPlayer {
         } else {
             KDEDebug("seekSafely: currentItem is failed, cannot seek")
             // seek is not possible
-            completionHandler(false)
+            completionHandler?(false)
         }
     }
 }

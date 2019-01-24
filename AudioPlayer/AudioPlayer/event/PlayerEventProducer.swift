@@ -140,9 +140,10 @@ class PlayerEventProducer: NSObject, EventProducer {
 
         //Observing timing event
         timeObserver = player.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 1, timescale: 2), queue: .main) { [weak self] time in
-            if let `self` = self {
-                self.eventListener?.onEvent(PlayerEvent.progressed(time), generetedBy: self)
+            guard let self = self else {
+                return
             }
+            self.eventListener?.onEvent(PlayerEvent.progressed(time), generetedBy: self)
         }
 
         listening = true

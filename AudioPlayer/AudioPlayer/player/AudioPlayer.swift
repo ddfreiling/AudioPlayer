@@ -401,6 +401,7 @@ import AVFoundation
     /// Updates the MPNowPlayingInfoCenter with current item's info.
     func updateNowPlayingInfoCenter() {
         #if os(iOS) || os(tvOS)
+            KDEDebug("updateNowPlayingInfoCenter")
             if let item = currentItem {
                 setRemoteControlCommandsEnabled(true)
                 MPNowPlayingInfoCenter.default().ap_update(
@@ -420,7 +421,6 @@ import AVFoundation
     /// - Parameter active: A boolean value indicating whether the audio session should be set to active or not.
     func setAudioSession(active: Bool) {
         #if os(iOS) || os(tvOS)
-            KDEDebug("AVAudioSession setActive(\(active))")
             do {
                 if (active) {
                     if #available(iOS 10.0, tvOS 10.0, *) {
@@ -431,6 +431,7 @@ import AVFoundation
                     }
                 }
                 try AVAudioSession.sharedInstance().setActive(active)
+                KDEDebug("AVAudioSession setActive(\(active))")
             } catch {
                 KDEDebug("AVAudioSession setActive(\(active)) Error: \(error.localizedDescription)")
             }

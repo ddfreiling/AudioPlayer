@@ -96,7 +96,7 @@ extension AudioPlayer {
         retryEventProducer.stopProducingEvents()
 
         if let _ = player {
-            player?.rate = 0
+            player?.pause()
             player?.replaceCurrentItem(with: nil)
             player = nil
         }
@@ -110,10 +110,10 @@ extension AudioPlayer {
         
         state = .stopped
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: { [unowned self] in
-            guard self.state == .stopped else {
-                return
-            }
+        // Fix: Some AVURLAssets may take a short while to seize I/O ops.
+        // We therefore delay ending the AudioSession
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05, execute: { [weak self] in
+            guard let self = self else { return }
             self.setAudioSession(active: false)
         })
     }

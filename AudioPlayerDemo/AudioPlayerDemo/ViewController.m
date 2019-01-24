@@ -29,6 +29,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    [self setupPlayer];
 }
 
 
@@ -48,45 +49,48 @@
     return item;
 }
 
-
-- (IBAction)play:(id)sender {
+- (void)setupPlayer {
     self.player = [[AudioPlayer alloc] init];
     self.player.delegate = self;
     
-    self.items = [[NSArray alloc] initWithObjects:
-//                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/01_michael_kamp_bunker_.mp3" withTitle:@"Intro" andArtist:@"Michael Kamp"],
-//                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/02_om_denne_udgave.mp3" withTitle:@"Om denne udgave" andArtist:@"Michael Kamp"],
-//                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/03_kolofon_og_bibliogra.mp3" withTitle:@"Kolofon og bib" andArtist:@"Michael Kamp"],
-//                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/04_citat.mp3" withTitle:@"Citat" andArtist:@"Michael Kamp"],
-//                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/05_kapitel_1.mp3" withTitle:@"Kapitel 1" andArtist:@"Michael Kamp"],
-//                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/06_kapitel_2.mp3" withTitle:@"Kapitel 2" andArtist:@"Michael Kamp"],
-//                  nil];
-                  [self audioItemFromURLString:@"https://archive.org/download/George-Orwell-1984-Audio-book/1984-01.mp3" withTitle:@"1984 - 1" andArtist:@"George Orwell"],
-                  [self audioItemFromURLString:@"https://archive.org/download/George-Orwell-1984-Audio-book/1984-02.mp3" withTitle:@"1984 - 2" andArtist:@"George Orwell"],
-                  [self audioItemFromURLString:@"https://archive.org/download/George-Orwell-1984-Audio-book/1984-03.mp3" withTitle:@"1984 - 3" andArtist:@"George Orwell"],
-                  nil];
-                  
-    [self.player playWithItems:self.items startAtIndex:0];
-    
     // Buffering strategy
     self.player.bufferingStrategy = AudioPlayerBufferingStrategyPlayWhenPreferredBufferDurationFull;
-    self.player.preferredBufferDurationBeforePlayback = 30.0;
-    self.player.preferredForwardBufferDuration = 300.0;
+    self.player.preferredBufferDurationBeforePlayback = 2.0;
+    self.player.preferredForwardBufferDuration = 600.0;
     self.player.timePitchAlgorithm = AVAudioTimePitchAlgorithmTimeDomain;
-    
+    self.player.remoteControlSkipIntervals = [NSArray arrayWithObjects:[NSNumber numberWithInt:10], nil];
+    self.player.remoteControlSupportedPlaybackRates = [NSArray arrayWithObjects:[NSNumber numberWithFloat:0.5], [NSNumber numberWithFloat:1.0], [NSNumber numberWithFloat:1.5], nil];
     self.player.remoteCommandsEnabled = [NSArray arrayWithObjects:
                                          [NSNumber numberWithInt:AudioPlayerRemoteCommandChangePlaybackPosition],
                                          [NSNumber numberWithInt:AudioPlayerRemoteCommandSkipBackward],
                                          [NSNumber numberWithInt:AudioPlayerRemoteCommandPlayPause],
                                          [NSNumber numberWithInt:AudioPlayerRemoteCommandSkipForward],
                                          nil];
-    self.player.remoteControlSkipIntervals = [NSArray arrayWithObject:[NSNumber numberWithInt:30]];
     
     // Default values, but setting explicitly
     self.player.resumeAfterInterruption = true;
     self.player.resumeAfterConnectionLoss = true;
-    
-    self.player.rate = 2.0;
+    self.items = [[NSArray alloc] initWithObjects:
+                  //                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/01_michael_kamp_bunker_.mp3" withTitle:@"Intro" andArtist:@"Michael Kamp"],
+                  //                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/02_om_denne_udgave.mp3" withTitle:@"Om denne udgave" andArtist:@"Michael Kamp"],
+                  //                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/03_kolofon_og_bibliogra.mp3" withTitle:@"Kolofon og bib" andArtist:@"Michael Kamp"],
+                  //                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/04_citat.mp3" withTitle:@"Citat" andArtist:@"Michael Kamp"],
+                  //                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/05_kapitel_1.mp3" withTitle:@"Kapitel 1" andArtist:@"Michael Kamp"],
+                  //                  [self audioItemFromURLString:@"https://lbs.nota.dk/api/v1.0/files/6115fbee-a21b-4d19-9bd9-c4670e8e5ca3/37027/0/06_kapitel_2.mp3" withTitle:@"Kapitel 2" andArtist:@"Michael Kamp"],
+                  //                  nil];
+                  [self audioItemFromURLString:@"https://archive.org/download/George-Orwell-1984-Audio-book/1984-01.mp3" withTitle:@"1984 - 1" andArtist:@"George Orwell"],
+                  [self audioItemFromURLString:@"https://archive.org/download/George-Orwell-1984-Audio-book/1984-02.mp3" withTitle:@"1984 - 2" andArtist:@"George Orwell"],
+                  [self audioItemFromURLString:@"https://archive.org/download/George-Orwell-1984-Audio-book/1984-03.mp3" withTitle:@"1984 - 3" andArtist:@"George Orwell"],
+                  nil];
+}
+
+
+- (IBAction)play:(id)sender {
+    if (self.player == nil) {        
+        [self setupPlayer];
+    }
+    self.player.rate = 1.5;
+    [self.player playWithItems:self.items startAtIndex:0];
 }
 - (IBAction)playPause:(id)sender {
     if (self.player.state == AudioPlayerStatePlaying) {
@@ -109,14 +113,13 @@
 - (IBAction)seekSpecific:(id)sender {
     [self.player playWithItems:self.items startAtIndex:1];
     
-    [self.player seekTo:5 byAdaptingTimeToFitSeekableRanges:false toleranceBefore:kCMTimePositiveInfinity toleranceAfter:kCMTimePositiveInfinity completionHandler: ^(BOOL success){
+    [self.player seekTo:50.5 byAdaptingTimeToFitSeekableRanges:false toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler: ^(BOOL success){
         NSLog(@"seek completed: %d", success);
     }];
 }
 
 - (IBAction)stop:(id)sender {
     [self.player stop];
-    
 }
 
 - (NSNumber *) getIndexForAudioItem:(AudioItem *)item {

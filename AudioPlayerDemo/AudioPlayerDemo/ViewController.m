@@ -58,6 +58,8 @@
     self.player.preferredBufferDurationBeforePlayback = 2.0;
     self.player.preferredForwardBufferDuration = 600.0;
     self.player.timePitchAlgorithm = AVAudioTimePitchAlgorithmTimeDomain;
+    self.player.sessionCategory = AVAudioSessionCategoryPlayback;
+    self.player.sessionMode = AVAudioSessionModeSpokenAudio;
     self.player.remoteControlSkipIntervals = [NSArray arrayWithObjects:[NSNumber numberWithInt:10], nil];
     self.player.remoteControlSupportedPlaybackRates = [NSArray arrayWithObjects:[NSNumber numberWithFloat:0.5], [NSNumber numberWithFloat:1.0], [NSNumber numberWithFloat:1.5], nil];
     self.player.remoteCommandsEnabled = [NSArray arrayWithObjects:

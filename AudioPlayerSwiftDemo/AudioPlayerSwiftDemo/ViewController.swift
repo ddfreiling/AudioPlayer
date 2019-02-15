@@ -19,9 +19,9 @@ class ViewController: UIViewController, AudioPlayerDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         player.delegate = self
-//        player.sessionCategory = AVAudioSessionCategoryPlayback
-//        player.sessionMode = AVAudioSessionModeSpokenAudio
-//        player.timePitchAlgorithm = AVAudioTimePitchAlgorithmTimeDomain
+        player.sessionCategory = AVAudioSession.Category.playback
+        player.sessionMode = AVAudioSession.Mode.spokenAudio
+        player.timePitchAlgorithm = AVAudioTimePitchAlgorithm.timeDomain
         player.remoteCommandsEnabled = [.changePlaybackPosition, .like, .dislike, .bookmark, .changePlaybackRate, .changeRepeatMode, .changeShuffleMode, .playPause, .skipBackward]
         player.remoteControlSkipIntervals = [60]
         player.bufferingStrategy = .playWhenPreferredBufferDurationFull;

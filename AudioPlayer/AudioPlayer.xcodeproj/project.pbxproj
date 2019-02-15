@@ -139,7 +139,7 @@
 		462679411AED567D003771C9 /* Info-iOS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-iOS.plist"; sourceTree = "<group>"; };
 		462679481AED567D003771C9 /* AudioPlayerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AudioPlayerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4626794E1AED567D003771C9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		462679671AED5DDC003771C9 /* AudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = AudioPlayer.swift; path = AudioPlayer/player/AudioPlayer.swift; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		462679671AED5DDC003771C9 /* AudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = AudioPlayer.swift; path = AudioPlayer/player/AudioPlayer.swift; sourceTree = SOURCE_ROOT; };
 		462C2A0E1DE7D175004E8F2D /* AudioPlayer+PlayerEvent_Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AudioPlayer+PlayerEvent_Tests.swift"; sourceTree = "<group>"; };
 		462FC8021C9D7C33005A674B /* AudioPlayerMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerMode.swift; sourceTree = "<group>"; };
 		4631A0301CA7D6F300202AA3 /* MPNowPlayingInfoCenter+AudioItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "MPNowPlayingInfoCenter+AudioItem.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -183,7 +183,7 @@
 		653E18841C353DD0003C0CAB /* Info-tvOS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-tvOS.plist"; sourceTree = "<group>"; };
 		BB3ED56B1EC4993400AA0C30 /* AudioPlayer+Preload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "AudioPlayer+Preload.swift"; sourceTree = "<group>"; };
 		BB5E356C1EC3738F001BF508 /* AudioPlayerBufferingStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerBufferingStrategy.swift; sourceTree = "<group>"; };
-		BB8319FD1EC9C66800EFE210 /* AudioPlayer+RemoteControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "AudioPlayer+RemoteControl.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		BB8319FD1EC9C66800EFE210 /* AudioPlayer+RemoteControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "AudioPlayer+RemoteControl.swift"; sourceTree = "<group>"; };
 		BB8424911EE97CC2000A6545 /* Debug.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Debug.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		BBC374321EF068B000F62915 /* SeekOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeekOperation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -915,7 +915,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
@@ -932,7 +932,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "be.delannoyk.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.2;
 			};
 			name = Release;

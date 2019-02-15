@@ -201,13 +201,13 @@ import AVFoundation
     public var allowExternalPlayback = true
 
     /// Defines which audio session category to set. Default value is `AVAudioSession.Category.playback`.
-    public var sessionCategory = AVAudioSession.Category.playback
+    public var sessionCategory: String = AVAudioSession.Category.playback.rawValue
 
     /// Defines which audio session mode to set. Default value is `AVAudioSession.Mode.default`.
-    public var sessionMode = AVAudioSession.Mode.default
+    public var sessionMode: String = AVAudioSession.Mode.default.rawValue
 
     /// Defines which time pitch algorithm to use. Default value is `AVAudioTimePitchAlgorithm.lowQualityZeroLatency`.
-    public var timePitchAlgorithm = AVAudioTimePitchAlgorithm.lowQualityZeroLatency
+    public var timePitchAlgorithm: String = AVAudioTimePitchAlgorithm.lowQualityZeroLatency.rawValue
 
     /// Defines whether the player should resume after a system interruption or not. Default value is `true`.
     public var resumeAfterInterruption = true
@@ -423,8 +423,10 @@ import AVFoundation
         #if os(iOS) || os(tvOS)
             do {
                 if (active) {
+                    let sessionMode = AVAudioSession.Mode.init(rawValue: self.sessionMode)
                     if #available(iOS 10.0, tvOS 10.0, *) {
-                        try AVAudioSession.sharedInstance().setCategory(sessionCategory, mode: sessionMode, options: [])
+                        let sessionCat = AVAudioSession.Category.init(rawValue: self.sessionCategory)
+                        try AVAudioSession.sharedInstance().setCategory(sessionCat, mode: sessionMode, options: [])
                     } else {
                         AVAudioSession.sharedInstance().perform(NSSelectorFromString("setCategory:error:"), with: sessionCategory)
                         try AVAudioSession.sharedInstance().setMode(sessionMode)

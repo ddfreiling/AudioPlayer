@@ -34,7 +34,8 @@ extension AudioPlayer {
     func getAVPlayerItem(forUrl: URL) -> AVPlayerItem {
         let asset = getAVURLAsset(forUrl: forUrl)
         let playerItem = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: AudioPlayer.assetPreloadKeys)
-        playerItem.audioTimePitchAlgorithm = self.timePitchAlgorithm
+        let timePitchAlg = AVAudioTimePitchAlgorithm.init(rawValue: self.timePitchAlgorithm)
+        playerItem.audioTimePitchAlgorithm = timePitchAlg
         if #available(iOS 10.0, tvOS 10.0, OSX 10.12, *) {
             playerItem.preferredForwardBufferDuration = self.preferredForwardBufferDuration
         }

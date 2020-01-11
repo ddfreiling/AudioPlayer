@@ -28,7 +28,7 @@ class NetworkEventProducer: NSObject, EventProducer {
     }
 
     /// The reachability to work with.
-    let reachability: Reachability?
+    let reachability: Reachability
 
     /// The date at which connection was lost.
     private(set) var connectionLossDate: NSDate?
@@ -45,11 +45,11 @@ class NetworkEventProducer: NSObject, EventProducer {
     /// Initializes a `NetworkEventProducer` with a reachability.
     ///
     /// - Parameter reachability: The reachability to work with.
-    init(reachability: Reachability?) {
-        lastConnection = reachability?.connection ?? Reachability.Connection.none
+    init(reachability: Reachability) {
         self.reachability = reachability
-
-        if lastConnection == Reachability.Connection.none {
+        
+        lastConnection = self.reachability.connection
+        if lastConnection == Reachability.Connection.unavailable {
             connectionLossDate = NSDate()
         }
     }
@@ -61,37 +61,39 @@ class NetworkEventProducer: NSObject, EventProducer {
 
     /// Starts listening to the player events.
     func startProducingEvents() {
-        guard !listening, let reachability = reachability else {
+        guard !listening else {
             return
         }
 
-        //Saving current status
+        // Saving current status
         lastConnection = reachability.connection
 
-        //Starting to listen to events
+        // Starting to listen to events
         NotificationCenter.default.addObserver(
             self,
             selector: .reachabilityStatusChanged,
             name: Notification.Name.reachabilityChanged,
             object: reachability)
-        try? reachability.startNotifier()
-
-        //Saving that we're currently listening
-        listening = true
+        
+        do {
+            try reachability.startNotifier()
+            //Saving that we're currently listening
+            listening = true
+        } catch {}
     }
 
     /// Stops listening to the player events.
     func stopProducingEvents() {
-        guard listening, let reachability = reachability else {
+        guard listening else {
             return
         }
 
-        //Stops listening to events
+        // Stops listening to events
         NotificationCenter.default.removeObserver(
             self, name: Notification.Name.reachabilityChanged, object: reachability)
         reachability.stopNotifier()
 
-        //Saving that we're not listening anymore
+        // Saving that we're not listening anymore
         listening = false
     }
 
@@ -99,13 +101,12 @@ class NetworkEventProducer: NSObject, EventProducer {
     ///
     /// - Parameter note: The notification information.
     @objc fileprivate func reachabilityStatusChanged(note: NSNotification) {
-        guard let reachability = reachability else { return }
         let newConnection = reachability.connection
         if newConnection != lastConnection {
-            if newConnection == Reachability.Connection.none {
+            if newConnection == Reachability.Connection.unavailable {
                 connectionLossDate = NSDate()
                 eventListener?.onEvent(NetworkEvent.connectionLost, generetedBy: self)
-            } else if lastConnection == Reachability.Connection.none {
+            } else if lastConnection == Reachability.Connection.unavailable {
                 eventListener?.onEvent(NetworkEvent.connectionRetrieved, generetedBy: self)
                 connectionLossDate = nil
             } else {

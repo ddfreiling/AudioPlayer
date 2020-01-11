@@ -22,7 +22,7 @@ import AVFoundation
     let backgroundHandler = BackgroundHandler()
 
     /// Reachability for network connection.
-    let reachability = Reachability()
+    let reachability = try! Reachability()
 
     // MARK: Event producers
 
@@ -396,7 +396,7 @@ import AVFoundation
     /// Convenience for checking if platform is currently online
     var isOnline: Bool {
         get {
-            return reachability != nil && reachability!.connection != Reachability.Connection.none
+            return reachability.connection != Reachability.Connection.unavailable
         }
     }
 

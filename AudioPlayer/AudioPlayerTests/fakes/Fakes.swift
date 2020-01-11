@@ -20,7 +20,7 @@ class FakeEventListener: EventListener {
 }
 
 class FakeReachability: Reachability {
-    var newConnection = Reachability.Connection.none {
+    var newConnection = Reachability.Connection.unavailable {
         didSet {
             NotificationCenter.default.post(name: Notification.Name.reachabilityChanged, object: self)
         }

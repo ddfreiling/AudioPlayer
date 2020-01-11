@@ -17,7 +17,7 @@ class NetworkEventProducer_Tests: XCTestCase {
     override func setUp() {
         super.setUp()
         listener = FakeEventListener()
-        reachability = FakeReachability()
+        reachability = try? FakeReachability()
         producer = NetworkEventProducer(reachability: reachability)
         producer.eventListener = listener
         producer.startProducingEvents()
@@ -76,7 +76,7 @@ class NetworkEventProducer_Tests: XCTestCase {
             e.fulfill()
         }
 
-        reachability.newConnection = .none
+        reachability.newConnection = .unavailable
 
         waitForExpectations(timeout: 1) { e in
             if let _ = e {

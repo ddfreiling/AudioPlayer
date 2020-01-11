@@ -14,7 +14,7 @@ extension AudioPlayer {
 
     /// The current item index in queue.
     public var currentItemIndexInQueue: Int? {
-        return currentItem.flatMap { queue?.items.index(of: $0) }
+        return currentItem.flatMap { queue?.items.firstIndex(of: $0) }
     }
 
     /// A boolean value indicating whether there is a next item to play or not.
@@ -58,7 +58,7 @@ extension AudioPlayer {
         }
         //Setup the new queue
         queue = AudioItemQueue(items: items, mode: mode)
-        if let realIndex = queue?.queue.index(of: items[index]) {
+        if let realIndex = queue?.queue.firstIndex(of: items[index]) {
             queue?.nextPosition = realIndex
         }
         //Set the new currentItem

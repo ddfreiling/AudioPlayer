@@ -173,12 +173,14 @@ extension AudioPlayer {
         }
         let newRepeatMode: AudioPlayerMode
         switch event.repeatType {
-        case .off:
-            newRepeatMode = .normal
         case .one:
             newRepeatMode = .repeat
         case .all:
             newRepeatMode = .repeatAll
+        case .off:
+            newRepeatMode = .normal
+        default:
+            newRepeatMode = .normal
         }
         self.mode = self.mode.contains(.shuffle) ? [.shuffle, newRepeatMode] : newRepeatMode
     }

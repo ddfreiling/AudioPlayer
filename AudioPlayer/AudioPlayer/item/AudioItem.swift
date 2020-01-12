@@ -34,7 +34,7 @@ public enum AudioQuality: Int {
 // MARK: - AudioItemURL
 
 /// `AudioItemURL` contains information about an Item URL such as its quality.
-@objc public class AudioItemURL: NSObject {
+@objcMembers public class AudioItemURL: NSObject {
     /// The quality of the stream.
     public let quality: AudioQuality
 
@@ -168,7 +168,7 @@ public enum AudioQuality: Int {
     @objc open dynamic var trackNumber: NSNumber?
 
     /// The artwork image of the item.
-    @objc open var artworkImage: Image? {
+    open var artworkImage: Image? {
         get {
             #if os(OSX)
                 return artwork

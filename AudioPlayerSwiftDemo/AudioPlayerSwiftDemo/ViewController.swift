@@ -130,7 +130,7 @@ class ViewController: UIViewController, AudioPlayerDelegate {
     func audioPlayer(_ audioPlayer: AudioPlayer, didChangeStateFrom from: AudioPlayerState, to state: AudioPlayerState) {
         print("AudioPlayer state \(from) -> \(state)")
         if (state == AudioPlayerState.failed) {
-            print("failed state: %@", player.failedError)
+            print("failed state: %@", player.failedError!)
         }
     }
     
